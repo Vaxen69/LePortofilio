@@ -1,0 +1,391 @@
+// Shared content for all 3 portfolio variations.
+// Bilingual FR/EN. First-person voice.
+
+window.PORTFOLIO_CONTENT = {
+  fr: {
+    nav: { about: 'À propos', work: 'Expérience', projects: 'Projets', skills: 'Compétences', contact: 'Contact' },
+    hero: {
+      kicker: 'Étudiant développeur · Valence, France',
+      name: 'Roman Rodriguez',
+      role: 'Développeur full-stack & mobile',
+      tagline: 'Je suis en 3ᵉ année de BUT Informatique en alternance chez KDS, où je conçois des outils internes — applications mobiles, sites web et CRM — au service d\u2019une logique métier exigeante.',
+      cta1: 'Voir mes projets',
+      cta2: 'Télécharger mon CV',
+    },
+    about: {
+      title: 'À propos',
+      paragraphs: [
+        'Je suis en 3ᵉ année de BUT Informatique, parcours « Réalisation d\u2019applications », à l\u2019IUT de Valence (Université Grenoble Alpes).',
+        'J\u2019aborde chaque projet de la même façon : j\u2019écoute, je cherche à comprendre le besoin réel, puis je livre une solution claire — qu\u2019il s\u2019agisse d\u2019un site vitrine médical, d\u2019une carte interactive métier ou d\u2019une application mobile pour des audits terrain.',
+        'Curieux par défaut, je continue d\u2019élargir ma palette technique au-delà du cadre académique : Rust, infrastructure ESXi, CI/CD GitLab.',
+      ],
+      values: [
+        { k: 'Écoute', v: 'Comprendre avant de coder' },
+        { k: 'Rigueur', v: 'Modélisation, tests, documentation' },
+        { k: 'Curiosité', v: 'Une nouvelle stack par trimestre' },
+      ],
+    },
+    work: {
+      title: 'Expérience',
+      items: [
+        {
+          period: '2025 — 2026',
+          role: 'Développeur Mobile & CRM · Alternance',
+          org: 'KDS',
+          logo: 'assets/logo-kds.jpg',
+          bullets: [
+            'Application mobile photo/dossier pour les audits de copropriétés (Flutter & React Native)',
+            'Création du site « Carte KDS » — outil interne de visualisation cartographique des dossiers d\u2019audit',
+            'Installation, configuration et déploiement d\u2019un CRM Airtable adapté aux processus internes',
+          ],
+        },
+        {
+          period: '2024 — 2025',
+          role: 'Développeur Full-Stack · Stage',
+          org: 'Dr J. Chandezon',
+          logo: 'assets/icon-chandezon.png',
+          bullets: [
+            'Maquette interactive Figma puis développement Full-Stack (HTML/CSS, PHP/MySQL)',
+            'Conception de la base de données relationnelle et des requêtes SQL',
+            'Site en ligne : drchandezon.fr',
+          ],
+        },
+        {
+          period: '2025 — 2026',
+          role: 'SAÉ · Application mobile transpalette',
+          org: 'Intermarché — Les Mousquetaires',
+          logo: 'assets/logo-mousquetaires.png',
+          bullets: [
+            'Conception d\u2019une application mobile embarquée sur transpalette pour préparateurs en entrepôt réfrigéré',
+            'Guidage pas-à-pas dans les allées et optimisation des tournées de préparation',
+            'Stack : React (front embarqué) + Symfony (API métier)',
+          ],
+        },
+      ],
+    },
+    projects: {
+      title: 'Projets sélectionnés',
+      items: [
+        {
+          id: 'audit-app',
+          featured: true,
+          name: 'PhotoKDS — Application d\u2019audits',
+          context: 'KDS · 2025 — en cours',
+          stack: ['Flutter', 'React Native', 'iOS', 'Android'],
+          icon: 'assets/icon-audit-app.png',
+          gallery: [
+            'assets/screenshot-photokds-home.png',
+            'assets/screenshot-photokds-camera.png',
+            'assets/screenshot-photokds-export.png',
+          ],
+          summary: 'Application mobile interne PhotoKDS permettant aux équipes terrain de constituer dossiers photo et rapports d\u2019intervention pendant les audits de copropriétés.',
+          contributions: [
+            'Architecture offline-first pour les chantiers sans réseau',
+            'Capture photo organisée par dossier et copropriété',
+            'Export structuré vers Downloads ou archive ZIP',
+            'Thématisation et personnalisation de l\u2019interface',
+          ],
+        },
+        {
+          id: 'kds-map',
+          name: 'Carte interactive KDS',
+          context: 'KDS · 2025',
+          stack: ['JavaScript', 'API cartographiques'],
+          icon: 'assets/icon-kds-map.png',
+          screenshot: 'assets/screenshot-kds-map.png',
+          summary: 'Carte interactive métier permettant la visualisation et la sélection des dossiers d\u2019audit géolocalisés sur l\u2019ensemble du parc.',
+          contributions: [
+            'Conception UX du filtrage par étape, type, organisation',
+            'Visualisation satellite et clusters de logements',
+            'Intégration des données métier en temps réel',
+          ],
+        },
+        {
+          id: 'mousquetaires',
+          name: 'App mobile transpalette · Intermarché',
+          context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
+          stack: ['React', 'Symfony', 'API REST'],
+          logo: 'assets/logo-mousquetaires.png',
+          summary: 'Application mobile embarquée sur transpalette destinée aux préparateurs de commandes en entrepôt réfrigéré, conçue pour les guider et fluidifier leurs tournées.',
+          contributions: [
+            'Recueil des besoins terrain en entrepôt frigorifique',
+            'Front React adapté à l\u2019usage gants + écran tactile',
+            'API Symfony pour la gestion des tournées de préparation',
+          ],
+        },
+        {
+          id: 'crm-airtable',
+          name: 'CRM interne Airtable',
+          context: 'KDS · 2025',
+          stack: ['Airtable', 'Automatisations', 'Intégrations'],
+          logo: 'assets/airtable-logo.png',
+          summary: 'Mise en place d\u2019un CRM Airtable de bout en bout : modélisation, automatisations et intégration aux flux internes.',
+          contributions: [
+            'Audit des processus existants',
+            'Modélisation relationnelle des entités CRM',
+            'Automatisations et vues filtrées par équipe',
+          ],
+        },
+        {
+          id: 'chandezon',
+          name: 'Site Dr Chandezon',
+          context: 'Stage · 2024 — 2025',
+          stack: ['PHP', 'MySQL', 'HTML/CSS', 'Figma'],
+          logo: 'assets/icon-chandezon.png',
+          screenshot: 'assets/screenshot-chandezon.png',
+          gallery: [
+            'assets/screenshot-chandezon.png',
+            'assets/screenshot-chandezon-about.png',
+            'assets/screenshot-chandezon-care.png',
+          ],
+          summary: 'Site vitrine et espace patient pour un cabinet de médecine morphologique et anti-âge. De la maquette Figma au déploiement.',
+          contributions: [
+            'Maquettes interactives Figma',
+            'Développement Full-Stack et base de données relationnelle',
+            'Mise en ligne sur drchandezon.fr',
+          ],
+          link: 'https://drchandezon.fr',
+        },
+      ],
+    },
+    skills: {
+      title: 'Compétences techniques',
+      groups: [
+        { label: 'Langages', items: ['Java', 'Python', 'PHP', 'C', 'Rust', 'JavaScript', 'HTML/CSS', 'SQL'] },
+        { label: 'Frameworks', items: ['React', 'Symfony', 'React Expo'] },
+        { label: 'Mobile', items: ['Flutter', 'React Native', 'Kotlin'] },
+        { label: 'DevOps', items: ['Docker', 'GitLab CI/CD', 'ESXi'] },
+        { label: 'Données', items: ['MySQL', 'Neo4j', 'Firestore', 'Power BI'] },
+        { label: 'Méthodes', items: ['UML', 'MVC', 'Modélio', 'Gestion de projet'] },
+      ],
+    },
+    education: {
+      title: 'Formation',
+      items: [
+        { period: '2025 — 2026', degree: 'BUT 3 Informatique · Réalisation d\u2019applications', school: 'IUT de Valence — UGA · Alternance' },
+        { period: '2024 — 2025', degree: 'BUT 2 Informatique · Réalisation d\u2019applications', school: 'IUT de Valence — UGA' },
+        { period: '2022 — 2023', degree: 'Baccalauréat général · Mention Assez Bien', school: 'Lycée les Catalins, Montélimar' },
+      ],
+    },
+    interests: {
+      title: 'Centres d\u2019intérêt',
+      music: {
+        label: 'Musique',
+        lead: 'Je passe une bonne partie de mon temps libre dans des casques. Trois familles surtout :',
+        genres: [
+          { name: 'Jazz Rap', note: 'Samples de cuivres, flow posé, lyrics travaillés' },
+          { name: 'Soul', note: 'Voix, groove, classiques 60s–70s' },
+          { name: 'R&B', note: 'Production moderne, atmosphères nocturnes' },
+        ],
+      },
+      items: [
+        { k: 'Football', v: 'Pratique occasionnelle, suivi des compétitions' },
+        { k: 'Journalisme & géopolitique', v: 'Suivi de l\u2019actualité internationale' },
+        { k: 'Culture audiovisuelle', v: 'Cinéma, séries, documentaires' },
+      ],
+    },
+    contact: {
+      title: 'Contact',
+      lead: 'Je suis disponible pour échanger sur une opportunité, un projet ou une candidature école.',
+      email: 'roman.theo.rodriguez@gmail.com',
+      phone: '07 50 02 64 78',
+      city: 'Valence, France',
+      languages: 'Français · Anglais B2 · Espagnol A2',
+      cv: 'Télécharger le CV (PDF)',
+    },
+    misc: { available: 'Disponible · alternance & école d\u2019ingénieur', viewProject: 'Voir le projet', backToList: 'Retour' },
+  },
+  en: {
+    nav: { about: 'About', work: 'Experience', projects: 'Projects', skills: 'Skills', contact: 'Contact' },
+    hero: {
+      kicker: 'CS student & developer · Valence, France',
+      name: 'Roman Rodriguez',
+      role: 'Full-stack & mobile developer',
+      tagline: 'I\u2019m a third-year CS student in a work-study program at KDS, where I build internal tools — mobile apps, websites and CRMs — for demanding business processes.',
+      cta1: 'See my projects',
+      cta2: 'Download my résumé',
+    },
+    about: {
+      title: 'About',
+      paragraphs: [
+        'I\u2019m a third-year CS student in the “Application Development” track at IUT de Valence (Université Grenoble Alpes).',
+        'I approach every project the same way: I listen, I try to understand the actual need, then I ship a clear solution — whether it\u2019s a medical practice site, a domain-specific interactive map or a mobile app for field audits.',
+        'Curious by default, I keep broadening my stack beyond the syllabus: Rust, ESXi infrastructure, GitLab CI/CD.',
+      ],
+      values: [
+        { k: 'Listening', v: 'Understand before coding' },
+        { k: 'Rigor', v: 'Modeling, testing, documentation' },
+        { k: 'Curiosity', v: 'A new stack every term' },
+      ],
+    },
+    work: {
+      title: 'Experience',
+      items: [
+        {
+          period: '2025 — 2026',
+          role: 'Mobile & CRM Developer · Apprenticeship',
+          org: 'KDS',
+          logo: 'assets/logo-kds.jpg',
+          bullets: [
+            'Mobile photo & case-file app for condominium audits (Flutter & React Native)',
+            'Built the “KDS Map” internal site — a cartographic tool for browsing audit cases',
+            'Set-up, configuration and rollout of an Airtable CRM tailored to internal processes',
+          ],
+        },
+        {
+          period: '2024 — 2025',
+          role: 'Full-Stack Developer · Internship',
+          org: 'Dr J. Chandezon',
+          logo: 'assets/icon-chandezon.png',
+          bullets: [
+            'Interactive Figma mockups, then Full-Stack development (HTML/CSS, PHP/MySQL)',
+            'Designed the relational database and SQL queries',
+            'Live at drchandezon.fr',
+          ],
+        },
+        {
+          period: '2025 — 2026',
+          role: 'SAÉ · Pallet truck mobile app',
+          org: 'Intermarché — Les Mousquetaires',
+          logo: 'assets/logo-mousquetaires.png',
+          bullets: [
+            'Designed a mobile app mounted on a pallet truck for order pickers in a refrigerated warehouse',
+            'Step-by-step aisle guidance and pick-route optimization',
+            'Stack: React (embedded front-end) + Symfony (business API)',
+          ],
+        },
+      ],
+    },
+    projects: {
+      title: 'Selected projects',
+      items: [
+        {
+          id: 'audit-app',
+          featured: true,
+          name: 'PhotoKDS — audit app',
+          context: 'KDS · 2025 — ongoing',
+          stack: ['Flutter', 'React Native', 'iOS', 'Android'],
+          icon: 'assets/icon-audit-app.png',
+          gallery: [
+            'assets/screenshot-photokds-home.png',
+            'assets/screenshot-photokds-camera.png',
+            'assets/screenshot-photokds-export.png',
+          ],
+          summary: 'Internal mobile app PhotoKDS letting field teams compile photo dossiers and reports during condominium audits.',
+          contributions: [
+            'Offline-first architecture for sites without coverage',
+            'Photo capture organized by case file and building',
+            'Structured export to Downloads or ZIP archive',
+            'Theming and UI customization',
+          ],
+        },
+        {
+          id: 'kds-map',
+          name: 'KDS interactive map',
+          context: 'KDS · 2025',
+          stack: ['JavaScript', 'Mapping APIs'],
+          icon: 'assets/icon-kds-map.png',
+          screenshot: 'assets/screenshot-kds-map.png',
+          summary: 'Domain-specific interactive map for visualizing and selecting geolocated audit cases across the whole portfolio.',
+          contributions: [
+            'UX design for filtering by stage, type, organization',
+            'Satellite view and clustered building markers',
+            'Real-time integration of business data',
+          ],
+        },
+        {
+          id: 'mousquetaires',
+          name: 'Pallet-truck app · Intermarché',
+          context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
+          stack: ['React', 'Symfony', 'REST API'],
+          logo: 'assets/logo-mousquetaires.png',
+          summary: 'Mobile app embedded on a pallet truck for order pickers in a refrigerated warehouse, designed to guide them and streamline their picking routes.',
+          contributions: [
+            'On-site requirements gathering in a refrigerated warehouse',
+            'React front-end tuned for gloves + touch usage',
+            'Symfony API for managing pick routes',
+          ],
+        },
+        {
+          id: 'crm-airtable',
+          name: 'Internal Airtable CRM',
+          context: 'KDS · 2025',
+          stack: ['Airtable', 'Automations', 'Integrations'],
+          logo: 'assets/airtable-logo.png',
+          summary: 'End-to-end Airtable CRM: modeling, automations and integration with internal flows.',
+          contributions: [
+            'Audit of existing processes',
+            'Relational modeling of CRM entities',
+            'Automations and team-filtered views',
+          ],
+        },
+        {
+          id: 'chandezon',
+          name: 'Dr Chandezon website',
+          context: 'Internship · 2024 — 2025',
+          stack: ['PHP', 'MySQL', 'HTML/CSS', 'Figma'],
+          logo: 'assets/icon-chandezon.png',
+          screenshot: 'assets/screenshot-chandezon.png',
+          gallery: [
+            'assets/screenshot-chandezon.png',
+            'assets/screenshot-chandezon-about.png',
+            'assets/screenshot-chandezon-care.png',
+          ],
+          summary: 'Showcase site and patient portal for a morphological & anti-aging medical practice — from Figma mockups to deployment.',
+          contributions: [
+            'Interactive Figma mockups',
+            'Full-Stack development and relational database',
+            'Live at drchandezon.fr',
+          ],
+          link: 'https://drchandezon.fr',
+        },
+      ],
+    },
+    skills: {
+      title: 'Technical skills',
+      groups: [
+        { label: 'Languages', items: ['Java', 'Python', 'PHP', 'C', 'Rust', 'JavaScript', 'HTML/CSS', 'SQL'] },
+        { label: 'Frameworks', items: ['React', 'Symfony', 'React Expo'] },
+        { label: 'Mobile', items: ['Flutter', 'React Native', 'Kotlin'] },
+        { label: 'DevOps', items: ['Docker', 'GitLab CI/CD', 'ESXi'] },
+        { label: 'Data', items: ['MySQL', 'Neo4j', 'Firestore', 'Power BI'] },
+        { label: 'Methods', items: ['UML', 'MVC', 'Modélio', 'Project management'] },
+      ],
+    },
+    education: {
+      title: 'Education',
+      items: [
+        { period: '2025 — 2026', degree: 'BUT 3 CS · Application Development', school: 'IUT de Valence — UGA · Apprenticeship' },
+        { period: '2024 — 2025', degree: 'BUT 2 CS · Application Development', school: 'IUT de Valence — UGA' },
+        { period: '2022 — 2023', degree: 'French Baccalauréat · Honors', school: 'Lycée les Catalins, Montélimar' },
+      ],
+    },
+    interests: {
+      title: 'Interests',
+      music: {
+        label: 'Music',
+        lead: 'A big chunk of my downtime lives inside headphones. Three families above all:',
+        genres: [
+          { name: 'Jazz Rap', note: 'Brass samples, laid-back flows, lyrical craft' },
+          { name: 'Soul', note: 'Voice, groove, 60s–70s classics' },
+          { name: 'R&B', note: 'Modern production, late-night moods' },
+        ],
+      },
+      items: [
+        { k: 'Football', v: 'Casual play and following competitions' },
+        { k: 'Journalism & geopolitics', v: 'International current affairs' },
+        { k: 'Audiovisual culture', v: 'Cinema, series, documentaries' },
+      ],
+    },
+    contact: {
+      title: 'Contact',
+      lead: 'I\u2019m available to discuss a role, a project or an engineering school application.',
+      email: 'roman.theo.rodriguez@gmail.com',
+      phone: '+33 7 50 02 64 78',
+      city: 'Valence, France',
+      languages: 'French · English B2 · Spanish A2',
+      cv: 'Download résumé (PDF)',
+    },
+    misc: { available: 'Available · apprenticeship & engineering school', viewProject: 'View project', backToList: 'Back' },
+  },
+};

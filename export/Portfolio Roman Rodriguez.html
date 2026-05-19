@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Portfolio — Roman Rodriguez</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Roman Rodriguez — développeur full-stack & mobile en alternance chez KDS. Étudiant BUT Informatique à l'IUT de Valence. React, Flutter, React Native, Symfony." />
+<meta name="author" content="Roman Rodriguez" />
+<meta name="theme-color" content="#4F46E5" />
+<link rel="icon" type="image/png" href="assets/photo-roman-portrait.png" />
+<link rel="apple-touch-icon" href="assets/photo-roman-portrait.png" />
+<!-- Open Graph / social previews -->
+<meta property="og:title" content="Roman Rodriguez — Développeur full-stack & mobile" />
+<meta property="og:description" content="Portfolio : projets KDS, Carte KDS, Dr Chandezon, applications mobiles d'audit et plus." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="assets/photo-roman.png" />
+<meta property="og:locale" content="fr_FR" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Roman Rodriguez — Développeur full-stack & mobile" />
+<meta name="twitter:description" content="Portfolio : projets KDS, Carte KDS, Dr Chandezon, applications mobiles d'audit et plus." />
+<meta name="twitter:image" content="assets/photo-roman.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #f5f6f8; scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+
+  /* Top scroll progress bar */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 10000;
+    background: transparent;
+  }
+  .scroll-progress > div {
+    height: 100%; background: linear-gradient(90deg, #4F46E5, #818cf8);
+    transform-origin: 0 0; will-change: transform;
+  }
+
+  /* Music section animations */
+  @keyframes vinyl-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes eq-bar {
+    0%   { height: 6px; }
+    100% { height: 32px; }
+  }
+  /* Interest card animations */
+  @keyframes ball-bounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-12px) rotate(20deg); }
+  }
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 0.12; }
+    50%      { transform: scale(1.08); opacity: 0.2; }
+  }
+  @keyframes film-pan {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(40px); }
+  }
+
+  /* Section underline draws in with the heading */
+  .section-underline { animation: draw-underline 1100ms cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 250ms; }
+  @keyframes draw-underline {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* Hover micro-animations — global */
+  .interest-card { cursor: default; }
+  .interest-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 50px rgba(15,23,42,0.18);
+  }
+  .skill-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+  }
+  .skill-row { transition: padding-left 0.25s ease; }
+  .skill-row:hover { padding-left: 6px !important; }
+
+  .music-pill:hover {
+    background: rgba(196,181,253,0.3) !important;
+    transform: translateY(-1px);
+  }
+
+  /* Project card lift + image zoom on hover */
+  .project-card { transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s; }
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 50px rgba(15,23,42,0.14);
+  }
+  .project-card img { transition: transform 0.6s cubic-bezier(0.22,1,0.36,1); }
+  .project-card:hover img { transform: scale(1.04); }
+
+  /* Work card hover — subtle lift + accent left edge */
+  .work-card {
+    transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s;
+  }
+  .work-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(15,23,42,0.08), inset 3px 0 0 #4F46E5;
+  }
+
+  /* Hero CTAs */
+  a[data-cta] { transition: transform 0.2s, box-shadow 0.2s; }
+  a[data-cta]:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(79,70,229,0.25); }
+
+
+  /* Nav links underline animation */
+  nav a {
+    position: relative;
+    transition: color 0.2s;
+  }
+  nav a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -4px;
+    height: 1.5px; background: #4F46E5; transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  }
+  nav a:hover { color: #4F46E5 !important; }
+  nav a:hover::after { transform: scaleX(1); }
+
+  /* Subtle hover lift baseline (scoped via JSX inline still applies) */
+  a, button { font-family: inherit; }
+</style>
+</head>
+<body>
+  <div class="scroll-progress"><div id="scroll-progress-bar"></div></div>
+  <div id="root"></div>
+
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4F46E5" />
+          <stop offset="100%" stop-color="#818cf8" />
+        </linearGradient>
+      </defs>
+      <rect width="200" height="200" rx="32" fill="url(#bg)" />
+      <text x="100" y="118" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="62" font-weight="700" fill="#fff" letter-spacing="-2">RR</text>
+    </svg>
+  </template>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="portfolio-data.jsx"></script>
+  <script type="text/babel" src="variation-soft-cool.jsx"></script>
+
+  <script type="text/babel">
+    const App = () => {
+      const [lang, setLang] = React.useState('fr');
+
+      // Scroll progress bar
+      React.useEffect(() => {
+        const bar = document.getElementById('scroll-progress-bar');
+        const onScroll = () => {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          const p = max > 0 ? h.scrollTop / max : 0;
+          if (bar) bar.style.transform = `scaleX(${p})`;
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      return <window.SoftCool lang={lang} setLang={setLang} />;
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
