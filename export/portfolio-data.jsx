@@ -3,7 +3,7 @@
 
 window.PORTFOLIO_CONTENT = {
   fr: {
-    nav: { about: 'À propos', work: 'Expérience', projects: 'Projets', skills: 'Compétences', contact: 'Contact' },
+    nav: { work: 'Parcours', projects: 'Projets', skills: 'Compétences', contact: 'Contact' },
     hero: {
       kicker: 'Étudiant développeur · Valence, France',
       name: 'Roman Rodriguez',
@@ -26,7 +26,7 @@ window.PORTFOLIO_CONTENT = {
       ],
     },
     work: {
-      title: 'Expérience',
+      title: 'Parcours',
       items: [
         {
           period: '2025 — 2026',
@@ -151,20 +151,21 @@ window.PORTFOLIO_CONTENT = {
     skills: {
       title: 'Compétences techniques',
       groups: [
-        { label: 'Langages', items: ['Java', 'Python', 'PHP', 'C', 'Rust', 'JavaScript', 'HTML/CSS', 'SQL'] },
-        { label: 'Frameworks', items: ['React', 'Symfony', 'React Expo'] },
-        { label: 'Mobile', items: ['Flutter', 'React Native', 'Kotlin'] },
-        { label: 'DevOps', items: ['Docker', 'GitLab CI/CD', 'ESXi'] },
-        { label: 'Données', items: ['MySQL', 'Neo4j', 'Firestore', 'Power BI'] },
-        { label: 'Méthodes', items: ['UML', 'MVC', 'Modélio', 'Gestion de projet'] },
+        { label: 'Développement Web', items: ['HTML/CSS', 'JavaScript', 'TypeScript', 'PHP', 'React', 'Symfony'] },
+        { label: 'Développement Logiciel', items: ['Java', 'Python', 'C', 'C++', 'C#', 'Rust'] },
+        { label: 'Mobile', items: ['Flutter', 'React Native', 'React Expo', 'Kotlin'] },
+        { label: 'Bases de données', items: ['SQL', 'Neo4j', 'Firestore', 'Power BI'] },
+        { label: 'Outils & Méthodes', items: ['Docker', 'GitLab CI/CD', 'ESXi', 'Godot', 'Modélio'] },
       ],
     },
     education: {
       title: 'Formation',
       items: [
-        { period: '2025 — 2026', degree: 'BUT 3 Informatique · Réalisation d\u2019applications', school: 'IUT de Valence — UGA · Alternance' },
-        { period: '2024 — 2025', degree: 'BUT 2 Informatique · Réalisation d\u2019applications', school: 'IUT de Valence — UGA' },
+        { period: '2025 — 2026', degree: 'BUT 3 Informatique · Réalisation d\u2019applications', school: 'IUT de Valence — UGA · Alternance', logo: 'assets/logo-iut-valence.png' },
+        { period: '2024 — 2025', degree: 'BUT 2 Informatique · Réalisation d\u2019applications', school: 'IUT de Valence — UGA', logo: 'assets/logo-iut-valence.png' },
+        { period: '2023 — 2024', degree: 'BUT 1 Informatique · Réalisation d’applications', school: 'IUT de Valence — UGA', logo: 'assets/logo-iut-valence.png' },
         { period: '2022 — 2023', degree: 'Baccalauréat général · Mention Assez Bien', school: 'Lycée les Catalins, Montélimar' },
+        { period: '~ 2018', degree: 'Découverte de l’informatique', school: 'Collège — cours de technologie · premières lignes avec Scratch' },
       ],
     },
     interests: {
@@ -192,11 +193,13 @@ window.PORTFOLIO_CONTENT = {
       city: 'Valence, France',
       languages: 'Français · Anglais B2 · Espagnol A2',
       cv: 'Télécharger le CV (PDF)',
+      linkedin: 'https://www.linkedin.com/in/roman-rodriguez-b34a96376/',
+      github: 'https://github.com/Vaxen69',
     },
     misc: { available: 'Disponible · alternance & école d\u2019ingénieur', viewProject: 'Voir le projet', backToList: 'Retour' },
   },
   en: {
-    nav: { about: 'About', work: 'Experience', projects: 'Projects', skills: 'Skills', contact: 'Contact' },
+    nav: { work: 'Journey', projects: 'Projects', skills: 'Skills', contact: 'Contact' },
     hero: {
       kicker: 'CS student & developer · Valence, France',
       name: 'Roman Rodriguez',
@@ -219,7 +222,7 @@ window.PORTFOLIO_CONTENT = {
       ],
     },
     work: {
-      title: 'Experience',
+      title: 'Journey',
       items: [
         {
           period: '2025 — 2026',
@@ -344,20 +347,21 @@ window.PORTFOLIO_CONTENT = {
     skills: {
       title: 'Technical skills',
       groups: [
-        { label: 'Languages', items: ['Java', 'Python', 'PHP', 'C', 'Rust', 'JavaScript', 'HTML/CSS', 'SQL'] },
-        { label: 'Frameworks', items: ['React', 'Symfony', 'React Expo'] },
-        { label: 'Mobile', items: ['Flutter', 'React Native', 'Kotlin'] },
-        { label: 'DevOps', items: ['Docker', 'GitLab CI/CD', 'ESXi'] },
-        { label: 'Data', items: ['MySQL', 'Neo4j', 'Firestore', 'Power BI'] },
-        { label: 'Methods', items: ['UML', 'MVC', 'Modélio', 'Project management'] },
+        { label: 'Web Development', items: ['HTML/CSS', 'JavaScript', 'TypeScript', 'PHP', 'React', 'Symfony'] },
+        { label: 'Software Development', items: ['Java', 'Python', 'C', 'C++', 'C#', 'Rust'] },
+        { label: 'Mobile', items: ['Flutter', 'React Native', 'React Expo', 'Kotlin'] },
+        { label: 'Databases', items: ['SQL', 'Neo4j', 'Firestore', 'Power BI'] },
+        { label: 'Tools & Methods', items: ['Docker', 'GitLab CI/CD', 'ESXi', 'Godot', 'Modélio'] },
       ],
     },
     education: {
       title: 'Education',
       items: [
-        { period: '2025 — 2026', degree: 'BUT 3 CS · Application Development', school: 'IUT de Valence — UGA · Apprenticeship' },
-        { period: '2024 — 2025', degree: 'BUT 2 CS · Application Development', school: 'IUT de Valence — UGA' },
+        { period: '2025 — 2026', degree: 'BUT 3 CS · Application Development', school: 'IUT de Valence — UGA · Apprenticeship', logo: 'assets/logo-iut-valence.png' },
+        { period: '2024 — 2025', degree: 'BUT 2 CS · Application Development', school: 'IUT de Valence — UGA', logo: 'assets/logo-iut-valence.png' },
+        { period: '2023 — 2024', degree: 'BUT 1 CS · Application Development', school: 'IUT de Valence — UGA', logo: 'assets/logo-iut-valence.png' },
         { period: '2022 — 2023', degree: 'French Baccalauréat · Honors', school: 'Lycée les Catalins, Montélimar' },
+        { period: '~ 2018', degree: 'Discovering computing', school: 'Middle school tech class · first lines of code with Scratch' },
       ],
     },
     interests: {
@@ -385,6 +389,8 @@ window.PORTFOLIO_CONTENT = {
       city: 'Valence, France',
       languages: 'French · English B2 · Spanish A2',
       cv: 'Download résumé (PDF)',
+      linkedin: 'https://www.linkedin.com/in/roman-rodriguez-b34a96376/',
+      github: 'https://github.com/Vaxen69',
     },
     misc: { available: 'Available · apprenticeship & engineering school', viewProject: 'View project', backToList: 'Back' },
   },
