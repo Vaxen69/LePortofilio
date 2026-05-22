@@ -1056,6 +1056,42 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
     ? { all: 'Tous', mobile: 'Mobile', web: 'Web', tools: 'Outils', other: 'Autres' }
     : { all: 'All', mobile: 'Mobile', web: 'Web', tools: 'Tools', other: 'Other' };
 
+  // Skill name → asset logo. `null` means no logo available yet — only the
+  // textual label is rendered. Shared between the Skills section and the
+  // project stack pills.
+  const skillLogos = {
+    Java: 'assets/java.png',
+    Python: 'assets/python_logo.png',
+    PHP: 'assets/php_PNG29.png',
+    C: 'assets/C_Logo.png',
+    'C++': 'assets/ISO_C++_Logo.svg.png',
+    'C#': 'assets/Logo_C_sharp.svg.png',
+    Rust: 'assets/Rust_programming_language_black_logo.svg.png',
+    JavaScript: 'assets/Unofficial_JavaScript_logo_2.svg.png',
+    TypeScript: 'assets/Typescript_logo_2020.svg.png',
+    'HTML/CSS': 'assets/HTML5_logo_and_wordmark.svg.png',
+    SQL: 'assets/sql.png',
+    React: 'assets/React_Logo_SVG.svg.png',
+    Symfony: 'assets/symfony.png',
+    'React Expo': 'assets/expo-go-app.svg',
+    Flutter: 'assets/Flutter_logo.svg.png',
+    'React Native': 'assets/React_Logo_SVG.svg.png',
+    Kotlin: 'assets/Kotlin_Icon.png',
+    Docker: 'assets/docker_icon_130955.png',
+    'GitLab CI/CD': 'assets/GitLab_icon.svg',
+    ESXi: 'assets/Vmware_workstation_16_icon.svg.png',
+    MySQL: null,
+    Neo4j: 'assets/neo4j-logo-png-transparent.png',
+    Firestore: 'assets/firestore.svg',
+    'Power BI': 'assets/New_Power_BI_Logo.svg.png',
+    Godot: 'assets/Godot_icon.svg',
+    Modélio: 'assets/modelio_103811.png',
+    // Project-stack-only entries (not in c.skills.groups but used in c.projects.items[].stack):
+    Airtable: 'assets/airtable_logo_icon_169628.png',
+    iOS: 'assets/Apple_logo_black.svg',
+    Android: 'assets/Android_logo_2019_(stacked).svg.png',
+  };
+
   const Projects = () => {
     const [filter, setFilter] = React.useState('all');
     const cats = Array.from(new Set(c.projects.items.map((p) => categorize(p.stack))));
@@ -1088,9 +1124,8 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
             <button key={p.id} className="project-card" onClick={() => setOpenProject(p.id)} style={{
               ...styles.card,
               padding: 0, width: '100%',
-              background: isFeatured ? '#0f172a' : '#ffffff',
-              color: isFeatured ? '#f8fafc' : '#0f172a',
-              border: isFeatured ? '1px solid #0f172a' : styles.card.border,
+              background: '#ffffff',
+              color: '#0f172a',
               cursor: 'pointer', textAlign: 'left', overflow: 'hidden',
               transition: 'transform .3s cubic-bezier(0.22,1,0.36,1), box-shadow .3s',
             }}
@@ -1122,13 +1157,19 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 {!isFeatured && !p.screenshot && !p.logo && <span>{p.id}.png</span>}
               </div>
               <div style={{ padding: 24 }}>
-                <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: isFeatured ? 'rgba(255,255,255,0.6)' : '#64748b', marginBottom: 10 }}>{p.context}</div>
+                <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#64748b', marginBottom: 10 }}>{p.context}</div>
                 <div style={{ fontSize: isFeatured ? 26 : 20, fontWeight: 600, marginBottom: 8, letterSpacing: '-0.01em' }}>{p.name}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.5, color: isFeatured ? 'rgba(248,250,252,0.75)' : '#475569', marginBottom: 16 }}>{p.summary}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.5, color: '#475569', marginBottom: 16 }}>{p.summary}</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {p.stack.map((s) => (
-                    <span key={s} style={{ ...styles.pill, background: isFeatured ? 'rgba(255,255,255,0.1)' : '#eef0f4', color: isFeatured ? 'rgba(248,250,252,0.85)' : '#475569' }}>{s}</span>
-                  ))}
+                  {p.stack.map((s) => {
+                    const logo = skillLogos[s];
+                    return (
+                      <span key={s} style={{ ...styles.pill, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        {logo && <img src={logo} alt="" style={{ width: 14, height: 14, objectFit: 'contain' }} />}
+                        {s}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </button>
@@ -1138,37 +1179,6 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
       </div>
     </Section>
     );
-  };
-
-  // Skill name → asset logo. `null` means no logo available yet — a textual
-  // tile is rendered as fallback. Add the missing file under assets/ and the
-  // tile picks it up automatically (no JSX change needed beyond this map).
-  const skillLogos = {
-    Java: 'assets/java.png',
-    Python: 'assets/python_logo.png',
-    PHP: 'assets/php_PNG29.png',
-    C: 'assets/C_Logo.png',
-    'C++': 'assets/ISO_C++_Logo.svg.png',
-    'C#': 'assets/Logo_C_sharp.svg.png',
-    Rust: 'assets/Rust_programming_language_black_logo.svg.png',
-    JavaScript: 'assets/Unofficial_JavaScript_logo_2.svg.png',
-    TypeScript: 'assets/Typescript_logo_2020.svg.png',
-    'HTML/CSS': 'assets/HTML5_logo_and_wordmark.svg.png',
-    SQL: 'assets/sql.png',
-    React: 'assets/React_Logo_SVG.svg.png',
-    Symfony: null,
-    'React Expo': 'assets/expo-go-app.svg',
-    Flutter: 'assets/Flutter_logo.svg.png',
-    'React Native': 'assets/React_Logo_SVG.svg.png',
-    Kotlin: 'assets/Kotlin_Icon.png',
-    Docker: 'assets/docker_icon_130955.png',
-    'GitLab CI/CD': 'assets/GitLab_icon.svg',
-    ESXi: 'assets/Vmware_workstation_16_icon.svg.png',
-    MySQL: null,
-    Neo4j: 'assets/neo4j-logo-png-transparent.png',
-    Firestore: 'assets/firestore.svg',
-    'Power BI': 'assets/New_Power_BI_Logo.svg.png',
-    Godot: 'assets/Godot_icon.svg',
   };
 
   // One distinctive accent per category — drives the colored tab + the soft
@@ -1355,7 +1365,15 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
             <h1 style={{ fontSize: 56, fontWeight: 600, letterSpacing: '-0.02em', margin: '0 0 20px' }}>{project.name}</h1>
             <p style={{ fontSize: 19, lineHeight: 1.55, color: '#334155', maxWidth: 720, margin: 0, marginBottom: 32 }}>{project.summary}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 32 }}>
-              {project.stack.map((s) => (<span key={s} style={styles.pill}>{s}</span>))}
+              {project.stack.map((s) => {
+                const logo = skillLogos[s];
+                return (
+                  <span key={s} style={{ ...styles.pill, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    {logo && <img src={logo} alt="" style={{ width: 14, height: 14, objectFit: 'contain' }} />}
+                    {s}
+                  </span>
+                );
+              })}
             </div>
             {project.gallery ? (
               (() => {
