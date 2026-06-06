@@ -106,6 +106,15 @@ window.PORTFOLIO_CONTENT = {
           context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
           stack: ['React', 'Symfony', 'API REST'],
           logo: 'assets/logo-mousquetaires.png',
+          screenshot: 'assets/screenshot-mousquetaires-dashboard.png',
+          gallery: [
+            'assets/screenshot-mousquetaires-login.png',
+            'assets/screenshot-mousquetaires-dashboard.png',
+            'assets/screenshot-mousquetaires-dashboard-2.png',
+            'assets/screenshot-mousquetaires-gestion.png',
+            'assets/screenshot-mousquetaires-supports.png',
+            'assets/screenshot-mousquetaires-preparation.png',
+          ],
           summary: 'Application mobile embarquée sur transpalette destinée aux préparateurs de commandes en entrepôt réfrigéré, conçue pour les guider et fluidifier leurs tournées.',
           contributions: [
             'Recueil des besoins terrain en entrepôt frigorifique',
@@ -302,6 +311,15 @@ window.PORTFOLIO_CONTENT = {
           context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
           stack: ['React', 'Symfony', 'REST API'],
           logo: 'assets/logo-mousquetaires.png',
+          screenshot: 'assets/screenshot-mousquetaires-dashboard.png',
+          gallery: [
+            'assets/screenshot-mousquetaires-login.png',
+            'assets/screenshot-mousquetaires-dashboard.png',
+            'assets/screenshot-mousquetaires-dashboard-2.png',
+            'assets/screenshot-mousquetaires-gestion.png',
+            'assets/screenshot-mousquetaires-supports.png',
+            'assets/screenshot-mousquetaires-preparation.png',
+          ],
           summary: 'Mobile app embedded on a pallet truck for order pickers in a refrigerated warehouse, designed to guide them and streamline their picking routes.',
           contributions: [
             'On-site requirements gathering in a refrigerated warehouse',

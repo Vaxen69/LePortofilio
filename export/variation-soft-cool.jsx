@@ -530,7 +530,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
     Docker: 'assets/docker_icon_130955.png',
     'GitLab CI/CD': 'assets/GitLab_icon.svg',
     ESXi: 'assets/Vmware_workstation_16_icon.svg.png',
-    MySQL: null,
+    MySQL: 'assets/sql.png',
     Neo4j: 'assets/neo4j-logo-png-transparent.png',
     Firestore: 'assets/firestore.svg',
     'Power BI': 'assets/New_Power_BI_Logo.svg.png',
@@ -804,6 +804,34 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
     </section>
   );
 
+  const Carousel = ({ images }) => {
+    const [i, setI] = React.useState(0);
+    const n = images.length;
+    const go = (d) => setI((p) => (p + d + n) % n);
+    const arrow = (side) => ({ position: 'absolute', top: '50%', [side]: 12, transform: 'translateY(-50%)', width: 44, height: 44, borderRadius: '50%', border: 'none', cursor: 'pointer', background: 'rgba(15,23,42,0.55)', color: '#fff', fontSize: 26, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' });
+    return (
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)', background: '#0f172a' }}>
+          <img src={images[i]} alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          {n > 1 && (
+            <>
+              <button onClick={() => go(-1)} aria-label={lang === 'fr' ? 'Précédent' : 'Previous'} style={arrow('left')}>‹</button>
+              <button onClick={() => go(1)} aria-label={lang === 'fr' ? 'Suivant' : 'Next'} style={arrow('right')}>›</button>
+              <div style={{ position: 'absolute', top: 12, right: 14, ...styles.mono, fontSize: 11, color: '#fff', background: 'rgba(0,0,0,0.45)', padding: '4px 8px', borderRadius: 8 }}>{i + 1} / {n}</div>
+            </>
+          )}
+        </div>
+        {n > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 14 }}>
+            {images.map((_, k) => (
+              <button key={k} onClick={() => setI(k)} aria-label={`${lang === 'fr' ? 'Image' : 'Image'} ${k + 1}`} style={{ width: k === i ? 22 : 8, height: 8, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 0, background: k === i ? accent : 'rgba(15,23,42,0.18)', transition: 'all 0.25s' }} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const ProjectDetail = () => {
     if (!project) return null;
     return (
@@ -846,16 +874,8 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                     </div>
                   );
                 }
-                // Wide / desktop gallery
-                return (
-                  <div style={{ display: 'grid', gap: 16, marginBottom: 32 }}>
-                    {project.gallery.map((src, i) => (
-                      <div key={i} style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }}>
-                        <img src={src} alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
-                      </div>
-                    ))}
-                  </div>
-                );
+                // Wide / desktop gallery → carousel
+                return <Carousel images={project.gallery} />;
               })()
             ) : project.screenshot ? (
               <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 32, border: '1px solid rgba(15,23,42,0.08)', background: '#0f172a' }}>
