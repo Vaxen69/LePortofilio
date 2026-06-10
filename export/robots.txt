@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vaxen69.github.io/LePortofilio/export/sitemap.xml

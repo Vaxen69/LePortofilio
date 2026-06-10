@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Adapter l'URL si le site est déployé ailleurs que GitHub Pages. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://vaxen69.github.io/LePortofilio/export/</loc>
+    <lastmod>2026-06-10</lastmod>
+  </url>
+</urlset>
