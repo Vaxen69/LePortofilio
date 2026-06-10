@@ -7,25 +7,29 @@
 <meta name="description" content="Roman Rodriguez — développeur full-stack & mobile en alternance chez KDS. Étudiant BUT Informatique à l'IUT de Valence. React, Flutter, React Native, Symfony." />
 <meta name="author" content="Roman Rodriguez" />
 <meta name="theme-color" content="#4F46E5" />
-<link rel="icon" type="image/png" href="assets/photo-roman-portrait.png" />
-<link rel="apple-touch-icon" href="assets/photo-roman-portrait.png" />
-<!-- Open Graph / social previews -->
+<link rel="icon" type="image/png" href="assets/favicon-64.png" />
+<link rel="apple-touch-icon" href="assets/favicon-180.png" />
+<!-- Open Graph / social previews.
+     NOTE : og:image et canonical doivent être des URL ABSOLUES.
+     Adapter l'URL de base si le site est déployé ailleurs que GitHub Pages. -->
+<link rel="canonical" href="https://vaxen69.github.io/LePortofilio/export/" />
 <meta property="og:title" content="Roman Rodriguez — Développeur full-stack & mobile" />
 <meta property="og:description" content="Portfolio : projets KDS, Carte KDS, Dr Chandezon, applications mobiles d'audit et plus." />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="assets/photo-roman.png" />
+<meta property="og:url" content="https://vaxen69.github.io/LePortofilio/export/" />
+<meta property="og:image" content="https://vaxen69.github.io/LePortofilio/export/assets/og-image.jpg" />
 <meta property="og:locale" content="fr_FR" />
 <meta property="og:locale:alternate" content="en_US" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Roman Rodriguez — Développeur full-stack & mobile" />
 <meta name="twitter:description" content="Portfolio : projets KDS, Carte KDS, Dr Chandezon, applications mobiles d'audit et plus." />
-<meta name="twitter:image" content="assets/photo-roman.png" />
+<meta name="twitter:image" content="https://vaxen69.github.io/LePortofilio/export/assets/og-image.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
-  html { margin: 0; padding: 0; background: #f5f6f8; scroll-behavior: smooth; }
-  body { margin: 0; padding: 0; background: transparent; scroll-behavior: smooth; }
+  html { margin: 0; padding: 0; background: #f5f6f8; scroll-behavior: smooth; overflow-x: hidden; }
+  body { margin: 0; padding: 0; background: transparent; scroll-behavior: smooth; overflow-x: hidden; }
   * { box-sizing: border-box; }
 
   /* Top scroll progress bar */
@@ -81,6 +85,53 @@
   .skill-row { transition: padding-left 0.25s ease; }
   .skill-row:hover { padding-left: 6px !important; }
 
+  /* Carrousel : l'image entre en glissant dans le sens de la navigation */
+  @keyframes carousel-next {
+    from { opacity: 0; transform: translateX(36px) scale(0.99); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes carousel-prev {
+    from { opacity: 0; transform: translateX(-36px) scale(0.99); }
+    to   { opacity: 1; transform: none; }
+  }
+  .carousel-in-next { animation: carousel-next 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .carousel-in-prev { animation: carousel-prev 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  /* Fiche projet : entrée en fondu + cartes précédent/suivant */
+  @keyframes detail-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .detail-in { animation: detail-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .detail-nav { transition: transform 0.25s, box-shadow 0.25s; }
+  .detail-nav:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(15,23,42,0.10); }
+
+  /* Logos des cartes Parcours : petite oscillation au survol */
+  @keyframes logo-wiggle {
+    0%   { transform: scale(1) rotate(0deg); }
+    30%  { transform: scale(1.14) rotate(-7deg); }
+    60%  { transform: scale(1.08) rotate(6deg); }
+    100% { transform: scale(1.1) rotate(0deg); }
+  }
+  .org-logo img { transition: transform 0.3s ease; }
+  .org-logo:hover img,
+  .org-fallback:hover { animation: logo-wiggle 0.45s ease both; }
+  .org-logo { transition: box-shadow 0.25s; }
+  .org-logo:hover { box-shadow: 0 10px 26px rgba(79,70,229,0.18); }
+
+  /* Chips projet des cartes Parcours : inversion au survol */
+  .project-chip:hover {
+    background: #4F46E5 !important;
+    color: #fff !important;
+    border-color: #4F46E5 !important;
+  }
+
+  /* Tuiles de compétences : lift au survol + logo qui s'anime */
+  .skill-tile { transition: transform 0.25s ease; cursor: default; }
+  .skill-tile:hover { transform: translateY(-4px); }
+  .skill-tile img, .skill-tile .skill-fallback { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .skill-tile:hover img, .skill-tile:hover .skill-fallback { transform: scale(1.14) rotate(-4deg); }
+
   .music-pill:hover {
     background: rgba(196,181,253,0.3) !important;
     transform: translateY(-1px);
@@ -124,6 +175,16 @@
 
   /* Subtle hover lift baseline (scoped via JSX inline still applies) */
   a, button { font-family: inherit; }
+
+  /* Accessibilité : neutralise animations et transitions si l'utilisateur le demande */
+  @media (prefers-reduced-motion: reduce) {
+    html, body { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -143,35 +204,14 @@
     </svg>
   </template>
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="vendor/react.production.min.js"></script>
+  <script src="vendor/react-dom.production.min.js"></script>
+  <!-- Babel standalone : uniquement pour le dev (compile le JSX à la volée).
+       La version de prod (index.html, générée par build-standalone.ps1) embarque le JS précompilé. -->
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <script type="text/babel" src="portfolio-data.jsx"></script>
   <script type="text/babel" src="variation-soft-cool.jsx"></script>
-
-  <script type="text/babel">
-    const App = () => {
-      const [lang, setLang] = React.useState('fr');
-
-      // Scroll progress bar
-      React.useEffect(() => {
-        const bar = document.getElementById('scroll-progress-bar');
-        const onScroll = () => {
-          const h = document.documentElement;
-          const max = h.scrollHeight - h.clientHeight;
-          const p = max > 0 ? h.scrollTop / max : 0;
-          if (bar) bar.style.transform = `scaleX(${p})`;
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-        return () => window.removeEventListener('scroll', onScroll);
-      }, []);
-
-      return <window.SoftCool lang={lang} setLang={setLang} />;
-    };
-
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+  <script type="text/babel" src="app.jsx"></script>
 </body>
 </html>

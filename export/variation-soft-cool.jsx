@@ -1,4 +1,4 @@
-// Variation 2 — Soft Cool
+﻿// Variation 2 — Soft Cool
 // Cool neutral grays with a single indigo accent. Asymmetric hero,
 // rounded card-based projects with hover lift. Approachable + premium.
 
@@ -31,14 +31,17 @@ const Reveal = ({ children, delay = 0, variant = 'up', y = 28, as: Tag = 'div', 
     flip:  { opacity: 0, transform: 'perspective(900px) rotateY(-22deg) translateX(40px)' },
     zoom:  { opacity: 0, transform: 'scale(1.08)' },
     rise:  { opacity: 0, transform: `translateY(${y + 16}px) scale(0.97)` },
+    pop:   { opacity: 0, transform: 'scale(0.4)' },
   }[variant] || { opacity: 0, transform: `translateY(${y}px)` };
   const visible = { opacity: 1, transform: 'translate(0,0) scale(1) perspective(900px) rotateX(0) rotateY(0)', filter: 'blur(0)' };
-  const dur = variant === 'blur' ? 900 : (variant === 'flip' || variant === 'tilt' ? 850 : 750);
+  const dur = variant === 'blur' ? 900 : (variant === 'flip' || variant === 'tilt' ? 850 : (variant === 'pop' ? 500 : 750));
+  // 'pop' : courbe avec léger dépassement pour un effet rebond
+  const curve = variant === 'pop' ? 'cubic-bezier(0.34, 1.56, 0.64, 1)' : 'cubic-bezier(0.22, 1, 0.36, 1)';
   return (
     <Tag ref={ref} style={{
       ...style,
       ...(shown ? visible : hidden),
-      transition: `opacity ${dur}ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform ${dur}ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, filter ${dur}ms ease ${delay}ms`,
+      transition: `opacity ${dur}ms ${curve} ${delay}ms, transform ${dur}ms ${curve} ${delay}ms, filter ${dur}ms ease ${delay}ms`,
       willChange: 'opacity, transform, filter',
     }} {...rest}>{children}</Tag>
   );
@@ -251,10 +254,52 @@ const ParticlesBg = ({ color = '79, 70, 229' }) => {
   );
 };
 
+// useMedia : suit une media query (responsive, les styles étant inline).
+const useMedia = (query) => {
+  const [matches, setMatches] = React.useState(() => window.matchMedia(query).matches);
+  React.useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = (e) => setMatches(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [query]);
+  return matches;
+};
+
 const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
   const c = window.PORTFOLIO_CONTENT[lang];
+  const isMobile = useMedia('(max-width: 768px)');
   const [openProject, setOpenProject] = React.useState(null);
   const project = openProject ? c.projects.items.find((p) => p.id === openProject) : null;
+
+  // Fiche projet synchronisée avec le hash : URL partageable (#projet-id),
+  // bouton retour du navigateur et touche Échap ferment la fiche.
+  const openProjectById = (id) => {
+    setOpenProject(id);
+    window.history.pushState(null, '', `#projet-${id}`);
+  };
+  const closeProject = () => {
+    setOpenProject(null);
+    if (/^#projet-/.test(window.location.hash)) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  };
+  React.useEffect(() => {
+    const fromHash = () => {
+      const m = window.location.hash.match(/^#projet-(.+)$/);
+      setOpenProject(m ? decodeURIComponent(m[1]) : null);
+    };
+    fromHash(); // permet d'arriver directement sur une fiche via l'URL
+    window.addEventListener('popstate', fromHash);
+    return () => window.removeEventListener('popstate', fromHash);
+  }, []);
+  React.useEffect(() => {
+    if (!openProject) return;
+    const onKey = (e) => { if (e.key === 'Escape') closeProject(); };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden'; // fige la page derrière la fiche
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+  }, [openProject]);
 
   // Hero blob parallax (transform is applied directly via ref — see useParallax)
   const blobRef = useParallax(0.25);
@@ -274,7 +319,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
       WebkitFontSmoothing: 'antialiased',
     },
     mono: { fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 11, letterSpacing: '0.04em' },
-    container: { maxWidth: 1120, margin: '0 auto', padding: '0 56px' },
+    container: { maxWidth: 1120, margin: '0 auto', padding: isMobile ? '0 20px' : '0 56px' },
     card: { background: '#ffffff', borderRadius: 18, border: '1px solid rgba(15,23,42,0.06)', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' },
     pill: { display: 'inline-block', padding: '4px 10px', borderRadius: 999, background: '#eef0f4', color: '#475569', fontSize: 12, fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.02em' },
     sectionEyebrow: { display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.12em', textTransform: 'uppercase', color: accent },
@@ -282,17 +327,19 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
   };
 
   const NavBar = ({ lang, setLang }) => (
-    <nav style={{ position: 'sticky', top: 12, zIndex: 10, padding: '0 56px', marginBottom: -52 }}>
-      <div style={{ ...styles.card, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', maxWidth: 1120, margin: '0 auto', backdropFilter: 'blur(12px)', background: 'rgba(255,255,255,0.85)' }}>
+    <nav style={{ position: 'sticky', top: 12, zIndex: 10, padding: isMobile ? '0 10px' : '0 56px', marginBottom: -52 }}>
+      <div style={{ ...styles.card, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: isMobile ? '10px 14px' : '12px 20px', maxWidth: 1120, margin: '0 auto', backdropFilter: 'blur(12px)', background: 'rgba(255,255,255,0.85)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 600, fontSize: 14 }}>
           <span style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden', display: 'inline-block', boxShadow: '0 0 0 1.5px #fff, 0 0 0 3px ' + accent }}>
-            <img src="assets/photo-roman-portrait.png" alt="Roman Rodriguez" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 22%', display: 'block' }} />
+            <img src="assets/photo-roman-portrait.webp" alt="Roman Rodriguez" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 22%', display: 'block' }} />
           </span>
           Roman Rodriguez
         </div>
-        <div style={{ display: 'flex', gap: 24, fontSize: 13, color: '#475569' }}>
-          {Object.values(c.nav).map((n) => (<a key={n} href={`#${n}`} data-spy={n} style={{ color: 'inherit', textDecoration: 'none', transition: 'color .2s, font-weight .2s' }}>{n}</a>))}
-        </div>
+        {!isMobile && (
+          <div style={{ display: 'flex', gap: 24, fontSize: 13, color: '#475569' }}>
+            {Object.values(c.nav).map((n) => (<a key={n} href={`#${n}`} data-spy={n} style={{ color: 'inherit', textDecoration: 'none', transition: 'color .2s, font-weight .2s' }}>{n}</a>))}
+          </div>
+        )}
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
           <a href={c.contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style={{ width: 32, height: 32, borderRadius: 8, background: '#eef0f4', color: '#475569', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'background .2s, color .2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = accent; e.currentTarget.style.color = '#fff'; }} onMouseLeave={(e) => { e.currentTarget.style.background = '#eef0f4'; e.currentTarget.style.color = '#475569'; }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
@@ -310,7 +357,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
   );
 
   const Hero = () => (
-    <section style={{ padding: '160px 0 100px', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: isMobile ? '120px 0 70px' : '160px 0 100px', position: 'relative', overflow: 'hidden' }}>
       {/* Parallax accent blob */}
       <div ref={blobRef} aria-hidden style={{
         position: 'absolute', top: '10%', right: '-10%', width: 520, height: 520,
@@ -319,17 +366,17 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
         pointerEvents: 'none', zIndex: 0, willChange: 'transform',
       }}></div>
       <div style={{ ...styles.container, position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 56, alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.5fr 1fr', gap: isMobile ? 40 : 56, alignItems: 'center' }}>
           <Reveal>
             <div style={styles.sectionEyebrow}><span style={styles.dot}></span>{c.hero.kicker}</div>
-            <h1 style={{ fontSize: 76, lineHeight: 1.02, fontWeight: 600, margin: '20px 0 24px', letterSpacing: '-0.03em' }}>
+            <h1 style={{ fontSize: isMobile ? 44 : 76, lineHeight: 1.02, fontWeight: 600, margin: '20px 0 24px', letterSpacing: '-0.03em' }}>
               {c.hero.name}.<br />
               <span style={{ color: '#64748b', fontWeight: 400 }}>{c.hero.role}.</span>
             </h1>
-            <p style={{ fontSize: 19, lineHeight: 1.55, color: '#334155', margin: 0, maxWidth: 580 }}>{c.hero.tagline}</p>
+            <p style={{ fontSize: isMobile ? 16.5 : 19, lineHeight: 1.55, color: '#334155', margin: 0, maxWidth: 580 }}>{c.hero.tagline}</p>
             <div style={{ display: 'flex', gap: 12, marginTop: 36, flexWrap: 'wrap', alignItems: 'center' }}>
               <a href={`#${c.nav.projects}`} data-cta style={{ padding: '13px 22px', borderRadius: 12, background: accent, color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{c.hero.cta1} →</a>
-              <a href="#" data-cta style={{ padding: '13px 22px', borderRadius: 12, background: '#fff', border: '1px solid rgba(15,23,42,0.1)', color: '#0f172a', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{c.hero.cta2}</a>
+              <a href="assets/cv-roman-rodriguez.pdf" download data-cta style={{ padding: '13px 22px', borderRadius: 12, background: '#fff', border: '1px solid rgba(15,23,42,0.1)', color: '#0f172a', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{c.hero.cta2}</a>
               <a href={c.contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-cta style={{ width: 44, height: 44, borderRadius: 12, background: '#fff', border: '1px solid rgba(15,23,42,0.1)', color: '#0f172a', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
               </a>
@@ -339,12 +386,12 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
             </div>
           </Reveal>
           <Reveal delay={180}>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', maxWidth: isMobile ? 400 : 'none', margin: isMobile ? '0 auto' : 0 }}>
               {/* Soft accent halo behind */}
               <div aria-hidden style={{ position: 'absolute', top: -20, left: -20, right: -20, bottom: -20, background: `radial-gradient(circle at 30% 40%, ${accent}30, transparent 65%)`, filter: 'blur(30px)', zIndex: 0 }}></div>
               {/* Workspace photo — square-ish framed card with gradient overlay */}
               <div style={{ position: 'relative', borderRadius: 22, overflow: 'hidden', boxShadow: '0 30px 70px rgba(15,23,42,0.22), 0 0 0 1px rgba(15,23,42,0.06)', zIndex: 1, aspectRatio: '4 / 5' }}>
-                <img src="assets/photo-roman-portrait.png" alt="Roman Rodriguez" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 22%', display: 'block' }} />
+                <img src="assets/photo-roman-portrait.webp" alt="Roman Rodriguez" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 22%', display: 'block' }} />
                 <div aria-hidden style={{ position: 'absolute', inset: 0, background: `linear-gradient(180deg, transparent 50%, rgba(15,23,42,0.55) 100%)` }}></div>
                 {/* Mono caption — bottom of photo */}
                 <div style={{ position: 'absolute', left: 18, bottom: 18, color: '#fff' }}>
@@ -371,7 +418,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
           <div style={styles.sectionEyebrow}>{eyebrow}</div>
         </Reveal>
         <Reveal variant="up" delay={80} style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.02em', margin: '12px 0 0' }}>{title}</h2>
+          <h2 style={{ fontSize: isMobile ? 32 : 44, fontWeight: 600, letterSpacing: '-0.02em', margin: '12px 0 0' }}>{title}</h2>
           <div className="section-underline" style={{ height: 2, background: 'linear-gradient(90deg, #4F46E5, transparent)', marginTop: 16, transformOrigin: 'left', borderRadius: 2 }}></div>
         </Reveal>
         <Reveal variant={variant} delay={180}>{children}</Reveal>
@@ -395,8 +442,9 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
       : { work: 'Experience', edu: 'Education' };
 
     // Rail geometry. The rail is fixed at `railX` from the column's left edge.
-    // Dates sit to the left of the rail, content sits to its right.
-    const railX = 120;
+    // Dates sit to the left of the rail on desktop, inside the cards on mobile.
+    const railX = isMobile ? 6 : 120;
+    const railGap = isMobile ? 18 : 28;
 
     // Track scroll progress through the timeline to fill the rail with the accent color.
     const railRef = React.useRef(null);
@@ -424,7 +472,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
 
     return (
       <Section id={c.nav.work} eyebrow={lang === 'fr' ? '· Études & expérience' : '· Studies & experience'} title={c.work.title} variant="up">
-        <div ref={railRef} style={{ position: 'relative', paddingLeft: railX + 28 }}>
+        <div ref={railRef} style={{ position: 'relative', paddingLeft: railX + railGap }}>
           {/* Static rail (light) */}
           <div aria-hidden style={{ position: 'absolute', left: railX, top: 6, bottom: 6, width: 2, background: 'rgba(15,23,42,0.08)', borderRadius: 2 }}></div>
           {/* Filled rail (indigo), scaled by scroll */}
@@ -436,44 +484,57 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
               const variant = i % 2 === 0 ? 'left' : 'right';
               return (
                 <Reveal key={`${it.kind}-${i}`} variant={variant} delay={i * 90} style={{ position: 'relative' }}>
-                  {/* Period — anchored left of the rail */}
-                  <div style={{ position: 'absolute', left: -(railX + 28), top: 18, width: railX - 14, textAlign: 'right', ...styles.mono, color: '#64748b', fontSize: 11, letterSpacing: '0.06em' }}>{it.period}</div>
+                  {/* Period — anchored left of the rail (desktop only) */}
+                  {!isMobile && <div style={{ position: 'absolute', left: -(railX + railGap), top: 18, width: railX - 14, textAlign: 'right', ...styles.mono, color: '#64748b', fontSize: 11, letterSpacing: '0.06em' }}>{it.period}</div>}
                   {/* Dot — sits exactly on the rail */}
-                  <span aria-hidden style={{ position: 'absolute', left: -28 - 5, top: 24, width: 12, height: 12, borderRadius: '50%', background: '#fff', border: `2px solid ${accent}`, boxShadow: `0 0 0 4px ${accent}1f` }}></span>
+                  <span aria-hidden style={{ position: 'absolute', left: -railGap - 5, top: 24, width: 12, height: 12, borderRadius: '50%', background: '#fff', border: `2px solid ${accent}`, boxShadow: `0 0 0 4px ${accent}1f` }}></span>
 
                   {/* Card */}
-                  <div className="work-card" style={{ ...styles.card, padding: 24 }}>
-                    {/* Kind pill */}
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 10px', borderRadius: 999, background: isWork ? `${accent}14` : '#eef0f4', color: isWork ? accent : '#475569', ...styles.mono, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 14 }}>
-                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: isWork ? accent : '#94a3b8' }}></span>
-                      {labels[it.kind]}
+                  <div className="work-card" style={{ ...styles.card, padding: isMobile ? 18 : 24 }}>
+                    {/* Kind pill + period (period shown here on mobile) */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 10px', borderRadius: 999, background: isWork ? `${accent}14` : '#eef0f4', color: isWork ? accent : '#475569', ...styles.mono, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: isWork ? accent : '#94a3b8' }}></span>
+                        {labels[it.kind]}
+                      </div>
+                      {isMobile && <span style={{ ...styles.mono, color: '#64748b', fontSize: 10 }}>{it.period}</span>}
                     </div>
 
                     {(() => {
-                      // Both kinds share the same 88px logo column when a logo is present.
-                      const fullBleed = it.logo && /logo-kds\.jpg$/.test(it.logo);
+                      // Both kinds share the same logo column when a logo is present.
+                      const logoSize = isMobile ? 56 : 88;
+                      const fullBleed = it.logo && /logo-kds\.webp$/.test(it.logo);
                       const initials = (it.org || it.school || '').split(' ').slice(0, 2).map((s) => s[0]).join('').toUpperCase();
                       const logoBlock = it.logo ? (
-                        <div style={{ width: 88, height: 88, borderRadius: 14, background: '#fff', border: '1px solid rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: fullBleed ? 0 : 10 }}>
-                          <img src={it.logo} alt={it.org || it.school} style={{ width: fullBleed ? '100%' : 'auto', height: fullBleed ? '100%' : 'auto', maxWidth: '100%', maxHeight: '100%', objectFit: fullBleed ? 'cover' : 'contain' }} />
+                        <div className="org-logo" style={{ width: logoSize, height: logoSize, borderRadius: 14, background: '#fff', border: '1px solid rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: fullBleed ? 0 : 10 }}>
+                          <img src={it.logo} alt={it.org || it.school} loading="lazy" style={{ width: fullBleed ? '100%' : 'auto', height: fullBleed ? '100%' : 'auto', maxWidth: '100%', maxHeight: '100%', objectFit: fullBleed ? 'cover' : 'contain' }} />
                         </div>
                       ) : (
-                        <div style={{ width: 88, height: 88, borderRadius: 14, background: 'linear-gradient(135deg, #eef0f4, #f8fafc)', border: '1px solid rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 600, color: '#94a3b8', letterSpacing: '-0.02em' }}>{initials}</div>
+                        <div className="org-logo org-fallback" style={{ width: logoSize, height: logoSize, borderRadius: 14, background: 'linear-gradient(135deg, #eef0f4, #f8fafc)', border: '1px solid rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: isMobile ? 18 : 26, fontWeight: 600, color: '#94a3b8', letterSpacing: '-0.02em' }}>{initials}</div>
                       );
                       return (
-                        <div style={{ display: 'grid', gridTemplateColumns: '88px 1fr', gap: 22 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: `${logoSize}px 1fr`, gap: isMobile ? 14 : 22 }}>
                           <div>{logoBlock}</div>
                           {isWork ? (
                             <div>
                               <div style={{ fontSize: 20, fontWeight: 600, letterSpacing: '-0.01em' }}>{it.org}</div>
-                              <div style={{ fontSize: 13, color: accent, marginTop: 4, marginBottom: 14, fontWeight: 500 }}>{it.role}</div>
-                              <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                                {it.bullets.map((b, j) => (
-                                  <li key={j} style={{ fontSize: 14, color: '#334155', lineHeight: 1.6, marginBottom: 6, paddingLeft: 18, position: 'relative' }}>
-                                    <span style={{ position: 'absolute', left: 0, top: 9, width: 5, height: 5, borderRadius: '50%', background: accent }}></span>{b}
-                                  </li>
-                                ))}
-                              </ul>
+                              <div style={{ fontSize: 13, color: accent, marginTop: 4, marginBottom: 12, fontWeight: 500 }}>{it.role}</div>
+                              <p style={{ fontSize: 14, color: '#334155', lineHeight: 1.6, margin: '0 0 14px' }}>{it.summary}</p>
+                              {it.projects && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                  {it.projects.map((pid) => {
+                                    const p = c.projects.items.find((x) => x.id === pid);
+                                    if (!p) return null;
+                                    return (
+                                      <button key={pid} className="project-chip" onClick={() => openProjectById(pid)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 13px', borderRadius: 999, border: `1px solid ${accent}33`, background: `${accent}0d`, color: accent, fontSize: 12.5, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', transition: 'background .2s, color .2s, border-color .2s' }}>
+                                        {(p.icon || p.logo) && <img src={p.icon || p.logo} alt="" loading="lazy" style={{ width: 16, height: 16, borderRadius: 4, objectFit: 'contain' }} />}
+                                        {p.name}
+                                        <span aria-hidden>→</span>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
                             </div>
                           ) : (
                             <div>
@@ -510,36 +571,36 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
   // textual label is rendered. Shared between the Skills section and the
   // project stack pills.
   const skillLogos = {
-    Java: 'assets/java.png',
-    Python: 'assets/python_logo.png',
-    PHP: 'assets/php_PNG29.png',
-    C: 'assets/C_Logo.png',
-    'C++': 'assets/ISO_C++_Logo.svg.png',
-    'C#': 'assets/Logo_C_sharp.svg.png',
-    Rust: 'assets/Rust_programming_language_black_logo.svg.png',
-    JavaScript: 'assets/Unofficial_JavaScript_logo_2.svg.png',
-    TypeScript: 'assets/Typescript_logo_2020.svg.png',
-    'HTML/CSS': 'assets/HTML5_logo_and_wordmark.svg.png',
-    SQL: 'assets/sql.png',
-    React: 'assets/React_Logo_SVG.svg.png',
-    Symfony: 'assets/symfony.png',
+    Java: 'assets/java.webp',
+    Python: 'assets/python_logo.webp',
+    PHP: 'assets/php_PNG29.webp',
+    C: 'assets/C_Logo.webp',
+    'C++': 'assets/ISO_C++_Logo.svg.webp',
+    'C#': 'assets/Logo_C_sharp.svg.webp',
+    Rust: 'assets/Rust_programming_language_black_logo.svg.webp',
+    JavaScript: 'assets/Unofficial_JavaScript_logo_2.svg.webp',
+    TypeScript: 'assets/Typescript_logo_2020.svg.webp',
+    'HTML/CSS': 'assets/HTML5_logo_and_wordmark.svg.webp',
+    SQL: 'assets/sql.webp',
+    React: 'assets/React_Logo_SVG.svg.webp',
+    Symfony: 'assets/symfony.webp',
     'React Expo': 'assets/expo-go-app.svg',
-    Flutter: 'assets/Flutter_logo.svg.png',
-    'React Native': 'assets/React_Logo_SVG.svg.png',
-    Kotlin: 'assets/Kotlin_Icon.png',
-    Docker: 'assets/docker_icon_130955.png',
+    Flutter: 'assets/Flutter_logo.svg.webp',
+    'React Native': 'assets/React_Logo_SVG.svg.webp',
+    Kotlin: 'assets/Kotlin_Icon.webp',
+    Docker: 'assets/docker_icon_130955.webp',
     'GitLab CI/CD': 'assets/GitLab_icon.svg',
-    ESXi: 'assets/Vmware_workstation_16_icon.svg.png',
-    MySQL: 'assets/sql.png',
-    Neo4j: 'assets/neo4j-logo-png-transparent.png',
+    ESXi: 'assets/Vmware_workstation_16_icon.svg.webp',
+    MySQL: 'assets/sql.webp',
+    Neo4j: 'assets/neo4j-logo-png-transparent.webp',
     Firestore: 'assets/firestore.svg',
-    'Power BI': 'assets/New_Power_BI_Logo.svg.png',
+    'Power BI': 'assets/New_Power_BI_Logo.svg.webp',
     Godot: 'assets/Godot_icon.svg',
-    Modélio: 'assets/modelio_103811.png',
+    Modélio: 'assets/modelio_103811.webp',
     // Project-stack-only entries (not in c.skills.groups but used in c.projects.items[].stack):
-    Airtable: 'assets/airtable_logo_icon_169628.png',
+    Airtable: 'assets/airtable_logo_icon_169628.webp',
     iOS: 'assets/Apple_logo_black.svg',
-    Android: 'assets/Android_logo_2019_(stacked).svg.png',
+    Android: 'assets/Android_logo_2019_(stacked).svg.webp',
   };
 
   const Projects = () => {
@@ -565,13 +626,13 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
           );
         })}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         {items.map((p, i) => {
           const isFeatured = p.featured;
           const cardVariant = isFeatured ? 'zoom' : (i % 2 === 0 ? 'left' : 'right');
           return (
             <Reveal key={p.id} variant={cardVariant} delay={i * 90} style={{ gridColumn: isFeatured ? '1 / -1' : 'auto' }}>
-            <button key={p.id} className="project-card" onClick={() => setOpenProject(p.id)} style={{
+            <button key={p.id} className="project-card" onClick={() => openProjectById(p.id)} style={{
               ...styles.card,
               padding: 0, width: '100%',
               background: '#ffffff',
@@ -591,7 +652,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 position: 'relative', overflow: 'hidden',
               }}>
                 {isFeatured && p.icon && (
-                  <img src={p.icon} alt="" style={{ width: 96, height: 96, borderRadius: 22, boxShadow: '0 12px 40px rgba(0,0,0,0.35)' }} />
+                  <img src={p.icon} alt="" loading="lazy" style={{ width: 96, height: 96, borderRadius: 22, boxShadow: '0 12px 40px rgba(0,0,0,0.35)' }} />
                 )}
                 {isFeatured && (
                   <div style={{ position: 'absolute', top: 16, left: 20, fontSize: 11, fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.9)' }}>
@@ -599,10 +660,10 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                   </div>
                 )}
                 {!isFeatured && p.screenshot && (
-                  <img src={p.screenshot} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                  <img src={p.screenshot} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
                 )}
                 {!isFeatured && !p.screenshot && p.logo && (
-                  <img src={p.logo} alt="" style={{ maxWidth: '55%', maxHeight: '70%', objectFit: 'contain' }} />
+                  <img src={p.logo} alt="" loading="lazy" style={{ maxWidth: '55%', maxHeight: '70%', objectFit: 'contain' }} />
                 )}
                 {!isFeatured && !p.screenshot && !p.logo && <span>{p.id}.png</span>}
               </div>
@@ -615,7 +676,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                     const logo = skillLogos[s];
                     return (
                       <span key={s} style={{ ...styles.pill, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                        {logo && <img src={logo} alt="" style={{ width: 14, height: 14, objectFit: 'contain' }} />}
+                        {logo && <img src={logo} alt="" loading="lazy" style={{ width: 14, height: 14, objectFit: 'contain' }} />}
                         {s}
                       </span>
                     );
@@ -644,7 +705,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
             return (
               <Reveal key={g.label} variant="up" delay={gi * 80}>
                 {/* Card with a colored tab leaking above the top-left corner, mbourand-style */}
-                <div style={{ ...styles.card, padding: '46px 36px 32px', position: 'relative', overflow: 'visible' }}>
+                <div style={{ ...styles.card, padding: isMobile ? '42px 16px 26px' : '46px 36px 32px', position: 'relative', overflow: 'visible' }}>
                   {/* Category tab */}
                   <div style={{
                     position: 'absolute', top: -16, left: 28,
@@ -662,20 +723,22 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                     <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, marginLeft: 4, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.06em' }}>{g.items.length}</span>
                   </div>
                   {/* Tile grid — flat, no inner cards */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '22px 8px' }}>
-                    {g.items.map((name) => {
+                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? 82 : 110}px, 1fr))`, gap: '22px 8px' }}>
+                    {g.items.map((name, si) => {
                       const logo = skillLogos[name];
                       return (
-                        <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 10, padding: '4px 6px' }}>
-                          {logo ? (
-                            <img src={logo} alt={name} style={{ width: 52, height: 52, objectFit: 'contain' }} />
-                          ) : (
-                            <div style={{ width: 52, height: 52, borderRadius: 12, background: `${col}1f`, color: col, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 600, letterSpacing: '-0.02em' }}>
-                              {name.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || '·'}
-                            </div>
-                          )}
-                          <div style={{ fontSize: 12.5, fontWeight: 500, color: '#334155', textAlign: 'center', lineHeight: 1.3 }}>{name}</div>
-                        </div>
+                        <Reveal key={name} variant="pop" delay={si * 70}>
+                          <div className="skill-tile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 10, padding: '4px 6px' }}>
+                            {logo ? (
+                              <img src={logo} alt={name} loading="lazy" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+                            ) : (
+                              <div className="skill-fallback" style={{ width: 52, height: 52, borderRadius: 12, background: `${col}1f`, color: col, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 600, letterSpacing: '-0.02em' }}>
+                                {name.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || '·'}
+                              </div>
+                            )}
+                            <div style={{ fontSize: 12.5, fontWeight: 500, color: '#334155', textAlign: 'center', lineHeight: 1.3 }}>{name}</div>
+                          </div>
+                        </Reveal>
                       );
                     })}
                   </div>
@@ -714,7 +777,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
     const m = c.interests.music;
     return (
       <div className="interest-card music-card" style={{ ...styles.card, padding: 0, overflow: 'hidden', background: 'linear-gradient(135deg, #1a1033 0%, #2a1454 50%, #4c1d95 100%)', color: '#f5f3ff', border: 'none', gridColumn: '1 / -1', position: 'relative', transition: 'transform .3s cubic-bezier(0.22,1,0.36,1), box-shadow .3s' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 0 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr', gap: 0 }}>
           <div style={{ padding: '24px 26px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(196,181,253,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>♪</div>
@@ -755,7 +818,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
 
   const Interests = () => (
     <Section eyebrow={lang === 'fr' ? '· Hors écran' : '· Off-screen'} title={c.interests.title} variant="zoom">
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 14 }}>
         <MusicCard />
         {c.interests.items.map((it, i) => {
           const viz = interestVisuals[it.k] || { grad: 'linear-gradient(135deg, #334155, #64748b)', glyph: '·', anim: 'none' };
@@ -774,15 +837,15 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
     <section id={c.nav.contact} style={{ padding: '60px 0 80px' }}>
       <div style={styles.container}>
         <Reveal variant="zoom">
-        <div style={{ ...styles.card, padding: 56, background: '#0f172a', color: '#f8fafc', border: 'none', backgroundImage: `radial-gradient(circle at 80% 0%, rgba(79,70,229,0.4), transparent 50%)` }}>
+        <div style={{ ...styles.card, padding: isMobile ? '32px 22px' : 56, background: '#0f172a', color: '#f8fafc', border: 'none', backgroundImage: `radial-gradient(circle at 80% 0%, rgba(79,70,229,0.4), transparent 50%)` }}>
           <div style={{ ...styles.sectionEyebrow, color: '#a5b4fc' }}><span style={{ ...styles.dot, background: '#a5b4fc' }}></span>{c.contact.title}</div>
-          <h2 style={{ fontSize: 56, fontWeight: 600, letterSpacing: '-0.02em', margin: '16px 0 20px', maxWidth: 720 }}>
+          <h2 style={{ fontSize: isMobile ? 32 : 56, fontWeight: 600, letterSpacing: '-0.02em', margin: '16px 0 20px', maxWidth: 720 }}>
             {lang === 'fr' ? 'Une opportunité, un projet, une question ?' : 'A role, a project, a question?'}
           </h2>
           <p style={{ fontSize: 18, color: 'rgba(248,250,252,0.7)', maxWidth: 580, lineHeight: 1.5, margin: 0, marginBottom: 36 }}>{c.contact.lead}</p>
           <div style={{ display: 'flex', gap: 12, marginBottom: 56, flexWrap: 'wrap', alignItems: 'center' }}>
             <a href={`mailto:${c.contact.email}`} data-cta style={{ padding: '14px 22px', borderRadius: 12, background: accent, color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>{c.contact.email}</a>
-            <a href="#" data-cta style={{ padding: '14px 22px', borderRadius: 12, background: 'rgba(255,255,255,0.08)', color: '#f8fafc', textDecoration: 'none', fontSize: 14, fontWeight: 500, border: '1px solid rgba(255,255,255,0.15)' }}>{c.contact.cv} ↓</a>
+            <a href="assets/cv-roman-rodriguez.pdf" download data-cta style={{ padding: '14px 22px', borderRadius: 12, background: 'rgba(255,255,255,0.08)', color: '#f8fafc', textDecoration: 'none', fontSize: 14, fontWeight: 500, border: '1px solid rgba(255,255,255,0.15)' }}>{c.contact.cv} ↓</a>
             <a href={c.contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-cta style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#f8fafc', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
             </a>
@@ -790,7 +853,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.11.79-.25.79-.56v-1.96c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.75.12 3.04.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.07.78 2.16v3.2c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
             </a>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 14 : 24, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.12)' }}>
             <div><div style={{ ...styles.mono, color: '#94a3b8', marginBottom: 4 }}>{lang === 'fr' ? 'Téléphone' : 'Phone'}</div><div>{c.contact.phone}</div></div>
             <div><div style={{ ...styles.mono, color: '#94a3b8', marginBottom: 4 }}>{lang === 'fr' ? 'Ville' : 'City'}</div><div>{c.contact.city}</div></div>
             <div><div style={{ ...styles.mono, color: '#94a3b8', marginBottom: 4 }}>{lang === 'fr' ? 'Langues' : 'Languages'}</div><div>{c.contact.languages}</div></div>
@@ -806,13 +869,19 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
 
   const Carousel = ({ images }) => {
     const [i, setI] = React.useState(0);
+    const [dir, setDir] = React.useState(1); // sens du slide pour l'animation
     const n = images.length;
-    const go = (d) => setI((p) => (p + d + n) % n);
+    const go = (d) => { setDir(d); setI((p) => (p + d + n) % n); };
+    const jump = (k) => { setDir(k > i ? 1 : -1); setI(k); };
+    // Précharge toutes les images du carrousel pour des transitions sans flash.
+    React.useEffect(() => {
+      images.forEach((src) => { const im = new Image(); im.src = src; });
+    }, [images.join('|')]);
     const arrow = (side) => ({ position: 'absolute', top: '50%', [side]: 12, transform: 'translateY(-50%)', width: 44, height: 44, borderRadius: '50%', border: 'none', cursor: 'pointer', background: 'rgba(15,23,42,0.55)', color: '#fff', fontSize: 26, lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' });
     return (
       <div style={{ marginBottom: 32 }}>
         <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)', background: '#0f172a' }}>
-          <img src={images[i]} alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          <img key={i} src={images[i]} alt="" className={dir > 0 ? 'carousel-in-next' : 'carousel-in-prev'} style={{ width: '100%', height: 'auto', display: 'block' }} />
           {n > 1 && (
             <>
               <button onClick={() => go(-1)} aria-label={lang === 'fr' ? 'Précédent' : 'Previous'} style={arrow('left')}>‹</button>
@@ -824,7 +893,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
         {n > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 14 }}>
             {images.map((_, k) => (
-              <button key={k} onClick={() => setI(k)} aria-label={`${lang === 'fr' ? 'Image' : 'Image'} ${k + 1}`} style={{ width: k === i ? 22 : 8, height: 8, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 0, background: k === i ? accent : 'rgba(15,23,42,0.18)', transition: 'all 0.25s' }} />
+              <button key={k} onClick={() => jump(k)} aria-label={`${lang === 'fr' ? 'Image' : 'Image'} ${k + 1}`} style={{ width: k === i ? 22 : 8, height: 8, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 0, background: k === i ? accent : 'rgba(15,23,42,0.18)', transition: 'all 0.25s' }} />
             ))}
           </div>
         )}
@@ -833,16 +902,26 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
   };
 
   const ProjectDetail = () => {
+    const scrollRef = React.useRef(null);
+    // Revient en haut de la fiche quand on passe d'un projet à l'autre.
+    React.useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [openProject]);
     if (!project) return null;
+    const visual = project.icon || project.logo;
     return (
-      <div style={{ position: 'fixed', inset: 0, background: '#f5f6f8', zIndex: 20, overflowY: 'auto' }}>
-        <div style={{ ...styles.container, paddingTop: 40, paddingBottom: 80 }}>
-          <button onClick={() => setOpenProject(null)} style={{ ...styles.mono, fontSize: 12, background: '#fff', border: '1px solid rgba(15,23,42,0.1)', borderRadius: 10, padding: '8px 14px', cursor: 'pointer', color: '#0f172a', marginBottom: 32 }}>← {c.misc.backToList}</button>
-          <div style={{ ...styles.card, padding: 40 }}>
-            <div style={{ ...styles.mono, color: accent, marginBottom: 12, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{project.context}</div>
-            <h1 style={{ fontSize: 56, fontWeight: 600, letterSpacing: '-0.02em', margin: '0 0 20px' }}>{project.name}</h1>
-            <p style={{ fontSize: 19, lineHeight: 1.55, color: '#334155', maxWidth: 720, margin: 0, marginBottom: 32 }}>{project.summary}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 32 }}>
+      <div ref={scrollRef} style={{ position: 'fixed', inset: 0, background: '#f5f6f8', zIndex: 20, overflowY: 'auto' }}>
+        <div className="detail-in" key={project.id} style={{ ...styles.container, paddingTop: 28, paddingBottom: 80 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+            <button onClick={closeProject} style={{ ...styles.mono, fontSize: 12, background: '#fff', border: '1px solid rgba(15,23,42,0.1)', borderRadius: 10, padding: '8px 14px', cursor: 'pointer', color: '#0f172a' }}>← {c.misc.backToList}</button>
+            <button onClick={closeProject} aria-label={c.misc.backToList} title="Échap" style={{ width: 38, height: 38, borderRadius: 10, background: '#fff', border: '1px solid rgba(15,23,42,0.1)', cursor: 'pointer', color: '#0f172a', fontSize: 15, lineHeight: 1 }}>✕</button>
+          </div>
+          <div style={{ ...styles.card, padding: isMobile ? 20 : 40 }}>
+            <div style={{ ...styles.mono, color: accent, marginBottom: 14, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{project.context}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 18, marginBottom: 20 }}>
+              {visual && <img src={visual} alt="" style={{ width: isMobile ? 46 : 64, height: isMobile ? 46 : 64, borderRadius: 14, objectFit: 'contain', background: '#fff', border: '1px solid rgba(15,23,42,0.08)', padding: 4, flexShrink: 0 }} />}
+              <h1 style={{ fontSize: isMobile ? 30 : 52, fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>{project.name}</h1>
+            </div>
+            <p style={{ fontSize: isMobile ? 16 : 19, lineHeight: 1.55, color: '#334155', maxWidth: 720, margin: '0 0 24px' }}>{project.summary}</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 32 }}>
               {project.stack.map((s) => {
                 const logo = skillLogos[s];
                 return (
@@ -852,6 +931,11 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                   </span>
                 );
               })}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" data-cta style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 999, background: accent, color: '#fff', textDecoration: 'none', fontSize: 13, fontWeight: 500 }}>
+                  {lang === 'fr' ? 'Visiter le site' : 'Visit website'} ↗
+                </a>
+              )}
             </div>
             {project.gallery ? (
               (() => {
@@ -896,15 +980,42 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 </div>
               </div>
             )}
-            <div style={{ ...styles.mono, color: accent, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>{lang === 'fr' ? 'Contributions' : 'Contributions'}</div>
-            <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+            <div style={{ ...styles.mono, color: accent, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>{lang === 'fr' ? 'Contributions' : 'Contributions'}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '18px' : '24px 40px' }}>
               {project.contributions.map((b, j) => (
-                <li key={j} style={{ fontSize: 16, color: '#334155', lineHeight: 1.55, marginBottom: 10, paddingLeft: 22, position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: 0, top: 9, width: 6, height: 6, borderRadius: '50%', background: accent }}></span>{b}
-                </li>
+                <div key={j}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 5 }}>
+                    <span aria-hidden style={{ width: 6, height: 6, borderRadius: '50%', background: accent, flexShrink: 0 }}></span>
+                    <span style={{ fontSize: 15.5, fontWeight: 600, color: '#0f172a', letterSpacing: '-0.01em' }}>{b.t}</span>
+                  </div>
+                  <div style={{ fontSize: 13.5, color: '#64748b', lineHeight: 1.5, paddingLeft: 15 }}>{b.d}</div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
+          {(() => {
+            // Navigation projet précédent / suivant (boucle sur la liste).
+            const items = c.projects.items;
+            const idx = items.findIndex((p) => p.id === project.id);
+            const prevP = items[(idx - 1 + items.length) % items.length];
+            const nextP = items[(idx + 1) % items.length];
+            const navCard = (p, dir) => (
+              <button onClick={() => openProjectById(p.id)} className="detail-nav" style={{ ...styles.card, textAlign: dir === 'prev' ? 'left' : 'right', padding: '16px 20px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                <div style={{ ...styles.mono, color: '#94a3b8', fontSize: 10, marginBottom: 6 }}>
+                  {dir === 'prev'
+                    ? `← ${lang === 'fr' ? 'Projet précédent' : 'Previous project'}`
+                    : `${lang === 'fr' ? 'Projet suivant' : 'Next project'} →`}
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#0f172a' }}>{p.name}</div>
+              </button>
+            );
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, marginTop: 20 }}>
+                {navCard(prevP, 'prev')}
+                {navCard(nextP, 'next')}
+              </div>
+            );
+          })()}
         </div>
       </div>
     );
