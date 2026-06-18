@@ -79,6 +79,7 @@ window.PORTFOLIO_CONTENT = {
         },
         {
           id: 'kds-map',
+          video: 'assets/kds-map-demo.mp4',
           name: 'Carte interactive KDS',
           context: 'KDS · 2025',
           stack: ['JavaScript', 'API cartographiques'],
@@ -93,6 +94,7 @@ window.PORTFOLIO_CONTENT = {
         },
         {
           id: 'mousquetaires',
+          video: 'assets/mousquetaires-demo.mp4',
           name: 'App mobile transpalette · Intermarché',
           context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
           stack: ['React', 'Symfony', 'API REST'],
@@ -128,6 +130,7 @@ window.PORTFOLIO_CONTENT = {
         },
         {
           id: 'chandezon',
+          video: 'assets/chandezon-demo.mp4',
           name: 'Site Dr Chandezon',
           context: 'Stage · 2024 — 2025',
           stack: ['PHP', 'MySQL', 'HTML/CSS', 'Figma'],
@@ -272,6 +275,7 @@ window.PORTFOLIO_CONTENT = {
         },
         {
           id: 'kds-map',
+          video: 'assets/kds-map-demo.mp4',
           name: 'KDS interactive map',
           context: 'KDS · 2025',
           stack: ['JavaScript', 'Mapping APIs'],
@@ -286,6 +290,7 @@ window.PORTFOLIO_CONTENT = {
         },
         {
           id: 'mousquetaires',
+          video: 'assets/mousquetaires-demo.mp4',
           name: 'Pallet-truck app · Intermarché',
           context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
           stack: ['React', 'Symfony', 'REST API'],
@@ -321,6 +326,7 @@ window.PORTFOLIO_CONTENT = {
         },
         {
           id: 'chandezon',
+          video: 'assets/chandezon-demo.mp4',
           name: 'Dr Chandezon website',
           context: 'Internship · 2024 — 2025',
           stack: ['PHP', 'MySQL', 'HTML/CSS', 'Figma'],

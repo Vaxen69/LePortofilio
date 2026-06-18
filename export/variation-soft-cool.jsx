@@ -646,7 +646,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 height: isFeatured ? 240 : 170,
                 background: isFeatured
                   ? `linear-gradient(135deg, #ff5b8a 0%, #f43f5e 60%, #be123c 100%)`
-                  : (p.screenshot ? '#0f172a' : (p.logo ? '#fff' : 'repeating-linear-gradient(135deg, #eef0f4, #eef0f4 6px, #f5f6f8 6px, #f5f6f8 12px)')),
+                  : (p.video || p.screenshot ? '#0f172a' : (p.logo ? '#fff' : 'repeating-linear-gradient(135deg, #eef0f4, #eef0f4 6px, #f5f6f8 6px, #f5f6f8 12px)')),
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: isFeatured ? 'rgba(255,255,255,0.7)' : '#94a3b8',
                 position: 'relative', overflow: 'hidden',
@@ -659,13 +659,16 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                     ★ {lang === 'fr' ? 'PROJET PHARE' : 'FEATURED'}
                   </div>
                 )}
-                {!isFeatured && p.screenshot && (
+                {!isFeatured && p.video && (
+                  <video src={p.video} muted loop playsInline preload="metadata" poster={p.screenshot || p.logo} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }} />
+                )}
+                {!isFeatured && !p.video && p.screenshot && (
                   <img src={p.screenshot} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
                 )}
-                {!isFeatured && !p.screenshot && p.logo && (
+                {!isFeatured && !p.video && !p.screenshot && p.logo && (
                   <img src={p.logo} alt="" loading="lazy" style={{ maxWidth: '55%', maxHeight: '70%', objectFit: 'contain' }} />
                 )}
-                {!isFeatured && !p.screenshot && !p.logo && <span>{p.id}.png</span>}
+                {!isFeatured && !p.video && !p.screenshot && !p.logo && <span>{p.id}.png</span>}
               </div>
               <div style={{ padding: 24 }}>
                 <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#64748b', marginBottom: 10 }}>{p.context}</div>
@@ -937,6 +940,11 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 </a>
               )}
             </div>
+            {project.video && (
+              <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 32, border: '1px solid rgba(15,23,42,0.08)', background: '#000' }}>
+                <video src={project.video} controls autoPlay muted loop playsInline style={{ width: '100%', height: 'auto', display: 'block' }} />
+              </div>
+            )}
             {project.gallery ? (
               (() => {
                 // Phone-style for audit-app (mobile screenshots), wide-card for chandezon (desktop screenshots)
