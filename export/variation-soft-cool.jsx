@@ -663,7 +663,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                   </div>
                   <div style={{ flex: isMobile ? '1 1 auto' : '0 0 42%', background: `linear-gradient(135deg, #ff5b8a 0%, #f43f5e 60%, #be123c 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 24px', overflow: 'hidden' }}>
                     <div style={{ height: isMobile ? 340 : 380, aspectRatio: '1080 / 2640', borderRadius: 28, overflow: 'hidden', border: '5px solid rgba(0,0,0,0.6)', boxShadow: '0 22px 60px rgba(0,0,0,0.5)', background: '#000' }}>
-                      <video src={p.video} muted loop playsInline preload="metadata" poster={p.gallery && p.gallery[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }} />
+                      <video src={p.video} muted loop playsInline preload="metadata" poster={p.gallery && p.gallery[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} ref={(el) => { if (!el || el.dataset.io) return; el.dataset.io = '1'; new IntersectionObserver((ents) => ents.forEach((en) => { en.isIntersecting ? el.play().catch(() => {}) : el.pause(); }), { threshold: 0.35 }).observe(el); }} />
                     </div>
                   </div>
                 </div>
@@ -688,7 +688,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                   </div>
                 )}
                 {!isFeatured && p.video && (
-                  <video src={p.video} muted loop playsInline preload="metadata" poster={p.screenshot || p.logo} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }} />
+                  <video src={p.video} muted loop playsInline preload="metadata" poster={p.screenshot || p.logo} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} ref={(el) => { if (!el || el.dataset.io) return; el.dataset.io = '1'; new IntersectionObserver((ents) => ents.forEach((en) => { en.isIntersecting ? el.play().catch(() => {}) : el.pause(); }), { threshold: 0.35 }).observe(el); }} />
                 )}
                 {!isFeatured && !p.video && p.screenshot && (
                   <img src={p.screenshot} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
