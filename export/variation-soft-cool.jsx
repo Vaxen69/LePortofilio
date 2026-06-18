@@ -407,6 +407,21 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
             </div>
           </Reveal>
         </div>
+        <Reveal delay={260}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '24px 0' : 0, marginTop: isMobile ? 48 : 72, borderTop: '1px solid rgba(15,23,42,0.08)', paddingTop: isMobile ? 28 : 36 }}>
+            {[
+              { n: '4', l: lang === 'fr' ? 'apps en production' : 'apps in production' },
+              { n: '500+', l: lang === 'fr' ? 'dossiers gérés' : 'case files managed' },
+              { n: '2 500+', l: lang === 'fr' ? 'tâches suivies' : 'tasks tracked' },
+              { n: '140+', l: lang === 'fr' ? 'tests automatisés' : 'automated tests' },
+            ].map((s, i) => (
+              <div key={i} style={{ flex: isMobile ? '0 0 50%' : '1 1 0', paddingRight: 16 }}>
+                <div style={{ fontSize: isMobile ? 32 : 42, fontWeight: 600, letterSpacing: '-0.02em', color: '#0f172a' }}>{s.n}</div>
+                <div style={{ ...styles.mono, fontSize: 11, color: '#64748b', marginTop: 6 }}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

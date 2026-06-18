@@ -70,7 +70,7 @@ window.PORTFOLIO_CONTENT = {
             'assets/screenshot-photokds-camera.webp',
             'assets/screenshot-photokds-export.webp',
           ],
-          summary: 'Application mobile interne PhotoKDS permettant aux équipes terrain de constituer dossiers photo et rapports d\u2019intervention pendant les audits de copropriétés.',
+          summary: 'Application mobile interne PhotoKDS permettant aux équipes terrain de constituer dossiers photo et rapports d\u2019intervention pendant les audits de copropriétés. Optimisée pour rester fluide même sur les appareils d’entrée de gamme.',
           contributions: [
             { t: 'Offline-first', d: 'Architecture pensée pour les chantiers sans réseau' },
             { t: 'Capture photo', d: 'Organisée par dossier et par copropriété' },
@@ -86,7 +86,7 @@ window.PORTFOLIO_CONTENT = {
           stack: ['JavaScript', 'API cartographiques'],
           icon: 'assets/icon-kds-map.webp',
           screenshot: 'assets/screenshot-kds-map.webp',
-          summary: 'Carte interactive métier permettant la visualisation et la sélection des dossiers d\u2019audit géolocalisés sur l\u2019ensemble du parc.',
+          summary: 'Carte interactive métier permettant la visualisation et la sélection des dossiers d\u2019audit géolocalisés sur l\u2019ensemble du parc. Des centaines de dossiers affichés sans ralentissement.',
           contributions: [
             { t: 'UX de filtrage', d: 'Par étape, type et organisation' },
             { t: 'Vue satellite', d: 'Clusters de logements sur tout le parc' },
@@ -98,7 +98,7 @@ window.PORTFOLIO_CONTENT = {
           video: 'assets/mousquetaires-demo.mp4',
           name: 'App mobile transpalette · Intermarché',
           context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
-          stack: ['React', 'Symfony', 'API REST'],
+          stack: ['React', 'Symfony', 'API REST', 'Docker', 'GitLab CI/CD'],
           logo: 'assets/logo-mousquetaires.webp',
           screenshot: 'assets/screenshot-mousquetaires-dashboard.webp',
           gallery: [
@@ -114,6 +114,7 @@ window.PORTFOLIO_CONTENT = {
             { t: 'Besoins terrain', d: 'Recueil sur site, en entrepôt frigorifique' },
             { t: 'Front React', d: 'Adapté à l\u2019usage gants + écran tactile' },
             { t: 'API Symfony', d: 'Gestion des tournées de préparation' },
+            { t: 'Déploiement', d: 'Conteneurisation Docker, CI/CD GitLab et mise en production cloud' },
           ],
         },
         {
@@ -122,7 +123,7 @@ window.PORTFOLIO_CONTENT = {
           context: 'KDS · 2025',
           stack: ['Airtable', 'Automatisations', 'Intégrations'],
           logo: 'assets/airtable-logo.webp',
-          summary: 'Mise en place d\u2019un CRM Airtable de bout en bout : modélisation, automatisations et intégration aux flux internes.',
+          summary: 'Mise en place d\u2019un CRM Airtable de bout en bout : modélisation, automatisations et intégration aux flux internes. Aujourd’hui ~500 dossiers et 2 500+ tâches gérés.',
           contributions: [
             { t: 'Audit', d: 'Analyse des processus existants' },
             { t: 'Modélisation', d: 'Relations entre les entités du CRM' },
@@ -267,7 +268,7 @@ window.PORTFOLIO_CONTENT = {
             'assets/screenshot-photokds-camera.webp',
             'assets/screenshot-photokds-export.webp',
           ],
-          summary: 'Internal mobile app PhotoKDS letting field teams compile photo dossiers and reports during condominium audits.',
+          summary: 'Internal mobile app PhotoKDS letting field teams compile photo dossiers and reports during condominium audits. Optimized to stay smooth even on low-end devices.',
           contributions: [
             { t: 'Offline-first', d: 'Architecture designed for sites without coverage' },
             { t: 'Photo capture', d: 'Organized by case file and building' },
@@ -283,7 +284,7 @@ window.PORTFOLIO_CONTENT = {
           stack: ['JavaScript', 'Mapping APIs'],
           icon: 'assets/icon-kds-map.webp',
           screenshot: 'assets/screenshot-kds-map.webp',
-          summary: 'Domain-specific interactive map for visualizing and selecting geolocated audit cases across the whole portfolio.',
+          summary: 'Domain-specific interactive map for visualizing and selecting geolocated audit cases across the whole portfolio. Hundreds of case files rendered without lag.',
           contributions: [
             { t: 'Filtering UX', d: 'By stage, type and organization' },
             { t: 'Satellite view', d: 'Clustered buildings across the portfolio' },
@@ -295,7 +296,7 @@ window.PORTFOLIO_CONTENT = {
           video: 'assets/mousquetaires-demo.mp4',
           name: 'Pallet-truck app · Intermarché',
           context: 'SAÉ · IUT Valence × Les Mousquetaires · 2025-2026',
-          stack: ['React', 'Symfony', 'REST API'],
+          stack: ['React', 'Symfony', 'REST API', 'Docker', 'GitLab CI/CD'],
           logo: 'assets/logo-mousquetaires.webp',
           screenshot: 'assets/screenshot-mousquetaires-dashboard.webp',
           gallery: [
@@ -311,6 +312,7 @@ window.PORTFOLIO_CONTENT = {
             { t: 'Field requirements', d: 'Gathered on site, in a refrigerated warehouse' },
             { t: 'React front-end', d: 'Tuned for gloves + touch usage' },
             { t: 'Symfony API', d: 'Manages the picking routes' },
+            { t: 'Deployment', d: 'Docker containerization, GitLab CI/CD and cloud release' },
           ],
         },
         {
@@ -319,7 +321,7 @@ window.PORTFOLIO_CONTENT = {
           context: 'KDS · 2025',
           stack: ['Airtable', 'Automations', 'Integrations'],
           logo: 'assets/airtable-logo.webp',
-          summary: 'End-to-end Airtable CRM: modeling, automations and integration with internal flows.',
+          summary: 'End-to-end Airtable CRM: modeling, automations and integration with internal flows. Now managing ~500 case files and 2,500+ tasks.',
           contributions: [
             { t: 'Audit', d: 'Review of existing processes' },
             { t: 'Modeling', d: 'Relational CRM entities' },
