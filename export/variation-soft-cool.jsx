@@ -671,7 +671,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
               <>
               {/* Visual */}
               <div style={{
-                height: isFeatured ? 240 : 170,
+                height: isFeatured ? 240 : 260,
                 background: isFeatured
                   ? `linear-gradient(135deg, #ff5b8a 0%, #f43f5e 60%, #be123c 100%)`
                   : (p.video || p.screenshot ? '#0f172a' : (p.logo ? '#fff' : 'repeating-linear-gradient(135deg, #eef0f4, #eef0f4 6px, #f5f6f8 6px, #f5f6f8 12px)')),
