@@ -60,6 +60,7 @@ window.PORTFOLIO_CONTENT = {
         {
           id: 'audit-app',
           featured: true,
+          video: 'assets/photokds-demo.mp4',
           name: 'PhotoKDS — Application d\u2019audits',
           context: 'KDS · 2025 — en cours',
           stack: ['Flutter', 'React Native', 'iOS', 'Android'],
@@ -256,6 +257,7 @@ window.PORTFOLIO_CONTENT = {
         {
           id: 'audit-app',
           featured: true,
+          video: 'assets/photokds-demo.mp4',
           name: 'PhotoKDS — audit app',
           context: 'KDS · 2025 — ongoing',
           stack: ['Flutter', 'React Native', 'iOS', 'Android'],

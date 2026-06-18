@@ -643,7 +643,7 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
             >
               {/* Visual */}
               <div style={{
-                height: isFeatured ? 240 : 170,
+                height: isFeatured ? (p.video ? 340 : 240) : 170,
                 background: isFeatured
                   ? `linear-gradient(135deg, #ff5b8a 0%, #f43f5e 60%, #be123c 100%)`
                   : (p.video || p.screenshot ? '#0f172a' : (p.logo ? '#fff' : 'repeating-linear-gradient(135deg, #eef0f4, #eef0f4 6px, #f5f6f8 6px, #f5f6f8 12px)')),
@@ -651,7 +651,12 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: isFeatured ? 'rgba(255,255,255,0.7)' : '#94a3b8',
                 position: 'relative', overflow: 'hidden',
               }}>
-                {isFeatured && p.icon && (
+                {isFeatured && p.video && (
+                  <div style={{ height: '86%', aspectRatio: '1080 / 2640', borderRadius: 20, overflow: 'hidden', border: '4px solid rgba(0,0,0,0.55)', boxShadow: '0 18px 50px rgba(0,0,0,0.45)', background: '#000' }}>
+                    <video src={p.video} muted loop playsInline preload="metadata" poster={p.gallery && p.gallery[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }} />
+                  </div>
+                )}
+                {isFeatured && !p.video && p.icon && (
                   <img src={p.icon} alt="" loading="lazy" style={{ width: 96, height: 96, borderRadius: 22, boxShadow: '0 12px 40px rgba(0,0,0,0.35)' }} />
                 )}
                 {isFeatured && (
@@ -941,8 +946,8 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
               )}
             </div>
             {project.video && (
-              <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 32, border: '1px solid rgba(15,23,42,0.08)', background: '#000' }}>
-                <video src={project.video} controls autoPlay muted loop playsInline style={{ width: '100%', height: 'auto', display: 'block' }} />
+              <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 32, border: '1px solid rgba(15,23,42,0.08)', background: '#000', display: 'flex', justifyContent: 'center' }}>
+                <video src={project.video} controls autoPlay muted loop playsInline style={{ maxHeight: 600, maxWidth: '100%', width: 'auto', height: 'auto', display: 'block' }} />
               </div>
             )}
             {project.gallery ? (
