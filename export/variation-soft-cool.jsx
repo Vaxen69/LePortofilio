@@ -395,7 +395,6 @@ const SoftCool = ({ lang = 'fr', setLang = () => {} }) => {
                 <div aria-hidden style={{ position: 'absolute', inset: 0, background: `linear-gradient(180deg, transparent 50%, rgba(15,23,42,0.55) 100%)` }}></div>
                 {/* Mono caption — bottom of photo */}
                 <div style={{ position: 'absolute', left: 18, bottom: 18, color: '#fff' }}>
-                  <div style={{ ...styles.mono, fontSize: 10, letterSpacing: '0.16em', color: 'rgba(255,255,255,0.75)', textTransform: 'uppercase', marginBottom: 4 }}>// {lang === 'fr' ? 'Au taff' : 'At work'}</div>
                   <div style={{ fontSize: 14, fontWeight: 500 }}>{lang === 'fr' ? 'Valence \u00b7 KDS \u00b7 2026' : 'Valence \u00b7 KDS \u00b7 2026'}</div>
                 </div>
               </div>
